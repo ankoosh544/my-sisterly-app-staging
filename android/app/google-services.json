@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "911784672095",
+    "project_id": "sisterly-840df",
+    "storage_bucket": "sisterly-840df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911784672095:android:5d4b8a024a6b81a47fd4ea",
+        "android_client_info": {
+          "package_name": "com.sisterly.sisterly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911784672095-je7ghu89ci0kg8rvtjhstivc09pan9lu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1kaBB6L-_0eHV1yMk0W1C27gq-9h_UeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911784672095-je7ghu89ci0kg8rvtjhstivc09pan9lu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911784672095-g6i0jqpqfevtpej75ammfd8hig4u2ifq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sisterly.sisterly"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
