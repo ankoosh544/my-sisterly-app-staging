@@ -25,6 +25,7 @@ class SignupScreenState extends State<SignupScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _confirmemailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _birthDayText = TextEditingController();
@@ -71,6 +72,11 @@ class SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    if (ApiManager.isEmpty(_confirmemailController.text.trim())) {
+      ApiManager.showErrorToast(context, "signup_email_mandatory");
+      return;
+    }
+
     if (ApiManager.isEmpty(_passwordController.text.trim())) {
       ApiManager.showErrorToast(context, "signup_password_mandatory");
       return;
@@ -87,9 +93,12 @@ class SignupScreenState extends State<SignupScreen> {
 
     _usernameController.text = _usernameController.text.toLowerCase().trim();
     _emailController.text = _emailController.text.toLowerCase().trim();
+    _confirmemailController.text =
+        _confirmemailController.text.toLowerCase().trim();
 
     ApiManager(context).signup(
         _emailController.text.trim(),
+        _confirmemailController.text.trim(),
         _usernameController.text.trim(),
         _passwordController.text,
         _firstNameController.text,
@@ -144,6 +153,7 @@ class SignupScreenState extends State<SignupScreen> {
     _lastNameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
+    _confirmemailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -645,6 +655,56 @@ class SignupScreenState extends State<SignupScreen> {
                               fillColor: Constants.WHITE,
                             ),
                             controller: _emailController,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        const Text("Confirm Email",
+                            style: TextStyle(
+                              color: Constants.TEXT_COLOR,
+                              fontSize: 16,
+                              fontFamily: Constants.FONT,
+                            )),
+                        const SizedBox(height: 7),
+                        Container(
+                          decoration: const BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x4ca3c4d4),
+                                spreadRadius: 8,
+                                blurRadius: 12,
+                                offset:
+                                    Offset(0, 0), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor: Constants.PRIMARY_COLOR,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Constants.FORM_TEXT,
+                            ),
+                            onChanged: (value) {
+                              _confirmemailController.value = TextEditingValue(
+                                  text: value.toLowerCase(),
+                                  selection: _confirmemailController.selection);
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Confirm Email",
+                              hintStyle: const TextStyle(
+                                  color: Constants.PLACEHOLDER_COLOR),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.all(16),
+                              filled: true,
+                              fillColor: Constants.WHITE,
+                            ),
+                            controller: _confirmemailController,
                           ),
                         ),
                         const SizedBox(height: 32),
