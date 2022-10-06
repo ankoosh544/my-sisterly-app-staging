@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -18,18 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SplashScreen extends StatefulWidget {
-
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
   SplashScreenState createState() => SplashScreenState();
-
 }
 
 class SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -38,13 +33,14 @@ class SplashScreenState extends State<SplashScreen> {
 
       loadConfig();
 
-      final status = await AppTrackingTransparency.requestTrackingAuthorization();
+      final status =
+          await AppTrackingTransparency.requestTrackingAuthorization();
     });
   }
 
   loadConfig() async {
     var preferences = await SharedPreferences.getInstance();
-    
+
     if (preferences.getString(Constants.PREFS_SERVER_URL) != null) {
       Constants.SERVER_URL = preferences.getString(Constants.PREFS_SERVER_URL)!;
     }
@@ -56,28 +52,32 @@ class SplashScreenState extends State<SplashScreen> {
     var refreshToken = preferences.getString(Constants.PREFS_REFRESH_TOKEN);
 
     Future.delayed(const Duration(milliseconds: 400), () async {
-      debugPrint("SplashScreen loadConfig. refreshToken: "+refreshToken.toString());
+      debugPrint(
+          "SplashScreen loadConfig. refreshToken: " + refreshToken.toString());
       autologin();
     });
   }
 
   goToHome() {
-    Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => LoginScreen()), (_) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        new MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
+        (_) => false);
   }
 
   autologin() async {
     var preferences = await SharedPreferences.getInstance();
     var refreshToken = preferences.getString(Constants.PREFS_REFRESH_TOKEN);
 
-    if(refreshToken != null) {
+    if (refreshToken != null) {
       debugPrint("authentication refreshToken: " + refreshToken);
 
       ApiManager(context).refreshToken(refreshToken, (response) async {
         debugPrint("authentication refreshToken success");
 
-        if(response["access"] != null) {
+        if (response["access"] != null) {
           preferences.setString(Constants.PREFS_TOKEN, response["access"]);
-          preferences.setString(Constants.PREFS_REFRESH_TOKEN, response["refresh"]);
+          preferences.setString(
+              Constants.PREFS_REFRESH_TOKEN, response["refresh"]);
           SessionData().token = response["access"];
           access();
         } else {
@@ -104,14 +104,18 @@ class SplashScreenState extends State<SplashScreen> {
 
   goToTutorial() {
     setState(() {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()), (_) => false); //welcomescreen
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()),
+          (_) => false); //welcomescreen
       //Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()), (_) => false);
     });
   }
 
   goToLogin() {
     setState(() {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()), (_) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
+          (_) => false);
     });
   }
 
@@ -123,23 +127,31 @@ class SplashScreenState extends State<SplashScreen> {
       preferences.setInt(Constants.PREFS_USERID, account.id!);
       SessionData().userId = account.id;
 
-      if(account.username!.isEmpty || account.firstName!.isEmpty || account.lastName!.isEmpty || account.phone!.isEmpty || account.residencyCity!.isEmpty  || account.birthday == null) {
-
+      if (account.username!.isEmpty ||
+          account.firstName!.isEmpty ||
+          account.lastName!.isEmpty ||
+          account.phone!.isEmpty ||
+          account.residencyCity!.isEmpty ||
+          account.birthday == null) {
         setState(() async {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SocialProfileScreen()), (_) => false);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (BuildContext context) => SocialProfileScreen()),
+              (_) => false);
         });
       } else {
-        setState(() async {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TabScreen()), (_) => false);
+        setState(() {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => TabScreen()),
+              (_) => false);
         });
       }
     }, (res) {
       debugPrint("access account failed");
       SessionData().logout(context);
     });
-
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +159,8 @@ class SplashScreenState extends State<SplashScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          SvgPicture.asset("assets/images/bg_splash.svg",
+          SvgPicture.asset(
+            "assets/images/bg_splash.svg",
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.fill,
@@ -158,19 +171,22 @@ class SplashScreenState extends State<SplashScreen> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      SvgPicture.asset("assets/images/sisterly_logo.svg",
+                      SvgPicture.asset(
+                        "assets/images/sisterly_logo.svg",
                         width: 221,
                         height: 223,
                       ),
-                      const SizedBox(height: 30,),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Text(
-                        AppLocalizations.of(context).translate("generic_loading"),
+                        AppLocalizations.of(context)
+                            .translate("generic_loading"),
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontFamily: Constants.FONT,
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
                       )
                     ],

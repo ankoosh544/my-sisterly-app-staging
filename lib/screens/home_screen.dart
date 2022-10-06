@@ -338,10 +338,12 @@ class HomeScreenState extends State<HomeScreen> {
         _isLoadingNext = false;
       });
     }, (res) {
-      setState(() {
-        _isLoading = false;
-        _isLoadingNext = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _isLoadingNext = false;
+        });
+      }
     });
   }
 

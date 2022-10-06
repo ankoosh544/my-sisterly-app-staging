@@ -62,11 +62,13 @@ class AccountScreenState extends State<AccountScreen> {
   getStripeLoginUrl() {
     ApiManager(context).makePostRequest('/client/stripe-connect/login', {},
         (res) async {
-      setState(() {
-        if (res["data"] != null) {
-          _stripeLoginUrl = res["data"]["url"];
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (res["data"] != null) {
+            _stripeLoginUrl = res["data"]["url"];
+          }
+        });
+      }
     }, (res) {});
   }
 

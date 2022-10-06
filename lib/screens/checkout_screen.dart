@@ -1401,11 +1401,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _renderAddress(Address address) {
-    debugPrint("coming to render address widget");
-    debugPrint(address.toString());
-    List<String> menu = ['Elimina', 'Predefinito', 'Modifica'];
+    List<String> menu = ['Selezionare', 'Modifica', 'Elimina'];
     if (address.active) {
-      debugPrint(address.active.toString());
       menu = ['Modifica'];
     }
 
@@ -1454,7 +1451,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   case 'Elimina':
                     _deleteAddress(address);
                     break;
-                  case 'Predefinito':
+                  case 'Selezionare':
                     _setActiveAddress(address);
                     break;
                   case 'Modifica':
@@ -1504,26 +1501,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   getAddresses(Function? callback) {
     ApiManager(context).makeGetRequest('/client/address', {}, (response) {
-      debugPrint(response.toString());
-      debugPrint("HERE Address");
       _activeAddress = null;
       _addresses = [];
       if (response["data"] != null) {
         for (var address in response["data"]) {
-          debugPrint(address["active"].toString());
-          debugPrint("inf for loop");
           if (address["active"]) {
             _activeAddress = Address.fromJson(address);
           } else {
             _addresses.add(Address.fromJson(address));
           }
         }
-        debugPrint(_activeAddress.toString());
-        debugPrint("Active address");
-
         if (_addresses.isNotEmpty || _activeAddress != null) {
-          debugPrint(_activeAddress.toString());
-          debugPrint("============Address=============");
           setState(() {
             _hasAddress = true;
             _addNewAddress = false;

@@ -16,20 +16,16 @@ import "package:sisterly/utils/utils.dart";
 import '../widgets/alert/custom_alert.dart';
 import 'chat_screen.dart';
 
-enum InboxScreenMode {
-  messages, notifications
-}
+enum InboxScreenMode { messages, notifications }
 
 class InboxScreen extends StatefulWidget {
-
   const InboxScreen({Key? key}) : super(key: key);
 
   @override
   InboxScreenState createState() => InboxScreenState();
 }
 
-class InboxScreenState extends State<InboxScreen>  {
-
+class InboxScreenState extends State<InboxScreen> {
   bool _isLoading = false;
   List<Chat> _conversations = [];
   List<AppNotification> _notifications = [];
@@ -113,13 +109,17 @@ class InboxScreenState extends State<InboxScreen>  {
 
     String roughTimeString = DateFormat('jm').format(dateTime);
 
-    if (localDateTime.day == now.day && localDateTime.month == now.month && localDateTime.year == now.year) {
+    if (localDateTime.day == now.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
       return roughTimeString;
     }
 
     DateTime yesterday = now.subtract(Duration(days: 1));
 
-    if (localDateTime.day == yesterday.day && localDateTime.month == now.month && localDateTime.year == now.year) {
+    if (localDateTime.day == yesterday.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
       return "Ieri";
     }
 
@@ -136,7 +136,9 @@ class InboxScreenState extends State<InboxScreen>  {
     return InkWell(
       onTap: () async {
         String initialMessage = 'Come stai, ' + chat.user.firstName! + '?';
-        await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen(chat: chat, code: chat.code, initialMessage: initialMessage)));
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ChatScreen(
+                chat: chat, code: chat.code, initialMessage: initialMessage)));
         getConversations();
       },
       child: Stack(
@@ -145,7 +147,7 @@ class InboxScreenState extends State<InboxScreen>  {
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
@@ -166,13 +168,19 @@ class InboxScreenState extends State<InboxScreen>  {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(52.0),
                         child: CachedNetworkImage(
-                          width: 52, height: 52, fit: BoxFit.cover,
+                          width: 52,
+                          height: 52,
+                          fit: BoxFit.cover,
                           imageUrl: (chat.user.image ?? ""),
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => SvgPicture.asset("assets/images/placeholder.svg"),
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              SvgPicture.asset("assets/images/placeholder.svg"),
                         ),
                       ),
-                      SizedBox(width: 12,),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,29 +195,29 @@ class InboxScreenState extends State<InboxScreen>  {
                                         color: Constants.DARK_TEXT_COLOR,
                                         fontSize: 16,
                                         fontFamily: Constants.FONT,
-                                      fontWeight: FontWeight.bold
-                                    ),
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                if(chat.lastMessage != null) Text(
-                                  getVerboseDateTimeRepresentation(chat.lastMessage!.sendAt!.toLocal()),
-                                  style: TextStyle(
-                                      color: Constants.LIGHT_GREY_COLOR,
-                                      fontSize: 14,
-                                      fontFamily: Constants.FONT
+                                if (chat.lastMessage != null)
+                                  Text(
+                                    getVerboseDateTimeRepresentation(
+                                        chat.lastMessage!.sendAt!.toLocal()),
+                                    style: TextStyle(
+                                        color: Constants.LIGHT_GREY_COLOR,
+                                        fontSize: 14,
+                                        fontFamily: Constants.FONT),
                                   ),
-                                ),
                               ],
                             ),
-                            if(chat.lastMessage != null) SizedBox(height: 6),
-                            if(chat.lastMessage != null) Text(
-                              chat.lastMessage!.message.toString(),
-                              style: TextStyle(
-                                  color: Constants.DARK_TEXT_COLOR,
-                                  fontSize: 16,
-                                  fontFamily: Constants.FONT
+                            if (chat.lastMessage != null) SizedBox(height: 6),
+                            if (chat.lastMessage != null)
+                              Text(
+                                chat.lastMessage!.message.toString(),
+                                style: TextStyle(
+                                    color: Constants.DARK_TEXT_COLOR,
+                                    fontSize: 16,
+                                    fontFamily: Constants.FONT),
                               ),
-                            ),
                           ],
                         ),
                       )
@@ -233,28 +241,30 @@ class InboxScreenState extends State<InboxScreen>  {
                       cancelButtonColor: Colors.white,
                       //style: CustomAlertStyle.success,
                       onPress: (bool isConfirm) {
-                        Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
 
-                        if(isConfirm) {
-                          ApiManager(context).makeDeleteRequest('/chat/' + chat.code + "/", (res) {
-                            getConversations();
-                          }, (res) {
-                            getConversations();
-                          });
-                        }
-
-                        return false;
+                    if (isConfirm) {
+                      ApiManager(context)
+                          .makeDeleteRequest('/chat/' + chat.code + "/", (res) {
+                        getConversations();
+                      }, (res) {
+                        getConversations();
                       });
+                    }
+
+                    return false;
+                  });
                   //ApiManager.showFreeSuccessMessage(context, "");
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Constants.SECONDARY_COLOR,
-                      borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: Icon(Icons.clear, color: Colors.white, size: 22,)
-                )
-            ),
+                    decoration: BoxDecoration(
+                        color: Constants.SECONDARY_COLOR,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                      size: 22,
+                    ))),
           )
         ],
       ),
@@ -290,17 +300,21 @@ class InboxScreenState extends State<InboxScreen>  {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 10,
-                    shadowColor: Colors.black38,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SvgPicture.asset("assets/images/sisterly_logo.svg", width: 30,),
-                    )
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      elevation: 10,
+                      shadowColor: Colors.black38,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: SvgPicture.asset(
+                          "assets/images/sisterly_logo.svg",
+                          width: 30,
+                        ),
+                      )),
+                  SizedBox(
+                    width: 12,
                   ),
-                  SizedBox(width: 12,),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,29 +329,29 @@ class InboxScreenState extends State<InboxScreen>  {
                                     color: Constants.DARK_TEXT_COLOR,
                                     fontSize: 16,
                                     fontFamily: Constants.FONT,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            if(notification.sendAt != null) Text(
-                              getVerboseDateTimeRepresentation(notification.sendAt!),
-                              style: TextStyle(
-                                  color: Constants.LIGHT_GREY_COLOR,
-                                  fontSize: 14,
-                                  fontFamily: Constants.FONT
+                            if (notification.sendAt != null)
+                              Text(
+                                getVerboseDateTimeRepresentation(
+                                    notification.sendAt!),
+                                style: TextStyle(
+                                    color: Constants.LIGHT_GREY_COLOR,
+                                    fontSize: 14,
+                                    fontFamily: Constants.FONT),
                               ),
-                            ),
                           ],
                         ),
-                        if(notification.message != null) SizedBox(height: 6),
-                        if(notification.message != null) Text(
-                          notification.message.toString(),
-                          style: TextStyle(
-                              color: Constants.DARK_TEXT_COLOR,
-                              fontSize: 16,
-                              fontFamily: Constants.FONT
+                        if (notification.message != null) SizedBox(height: 6),
+                        if (notification.message != null)
+                          Text(
+                            notification.message.toString(),
+                            style: TextStyle(
+                                color: Constants.DARK_TEXT_COLOR,
+                                fontSize: 16,
+                                fontFamily: Constants.FONT),
                           ),
-                        ),
                       ],
                     ),
                   )
@@ -359,14 +373,20 @@ class InboxScreenState extends State<InboxScreen>  {
     return Scaffold(
       backgroundColor: Constants.PRIMARY_COLOR,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      floatingActionButton: _mode == InboxScreenMode.messages ? FloatingActionButton(
-        backgroundColor: Constants.SECONDARY_COLOR,
-        child: SvgPicture.asset("assets/images/chat_white.svg", width: 25,),
-        onPressed: () async {
-          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SearchUserScreen()));
-          getConversations();
-        },
-      ) : null,
+      floatingActionButton: _mode == InboxScreenMode.messages
+          ? FloatingActionButton(
+              backgroundColor: Constants.SECONDARY_COLOR,
+              child: SvgPicture.asset(
+                "assets/images/chat_white.svg",
+                width: 25,
+              ),
+              onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => SearchUserScreen()));
+                getConversations();
+              },
+            )
+          : null,
       body: Column(
         children: [
           HeaderWidget(title: "Sisterly Chats"),
@@ -376,9 +396,7 @@ class InboxScreenState extends State<InboxScreen>  {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)
-                  )
-              ),
+                      topRight: Radius.circular(30))),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
@@ -397,7 +415,8 @@ class InboxScreenState extends State<InboxScreen>  {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 10,
                               blurRadius: 30,
-                              offset: Offset(0, 0), // changes position of shadow
+                              offset:
+                                  Offset(0, 0), // changes position of shadow
                             ),
                           ],
                         ),
@@ -407,15 +426,24 @@ class InboxScreenState extends State<InboxScreen>  {
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   elevation: 0,
-                                  primary: _mode == InboxScreenMode.messages ? Constants.PRIMARY_COLOR : Colors.white,
+                                  primary: _mode == InboxScreenMode.messages
+                                      ? Constants.PRIMARY_COLOR
+                                      : Colors.white,
                                   textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 46, vertical: 14),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 46, vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50))),
+                              child: Text(
+                                'Messaggi',
+                                style: TextStyle(
+                                    color: _mode == InboxScreenMode.messages
+                                        ? Colors.white
+                                        : Constants.TEXT_COLOR),
                               ),
-                              child: Text('Messaggi', style: TextStyle(color: _mode == InboxScreenMode.messages ? Colors.white : Constants.TEXT_COLOR),),
                               onPressed: () {
                                 getConversations();
                                 setState(() {
@@ -425,16 +453,27 @@ class InboxScreenState extends State<InboxScreen>  {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: _mode == InboxScreenMode.notifications ? Constants.PRIMARY_COLOR : Colors.white,
+                                  primary:
+                                      _mode == InboxScreenMode.notifications
+                                          ? Constants.PRIMARY_COLOR
+                                          : Colors.white,
                                   elevation: 0,
                                   textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 46, vertical: 14),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 46, vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50))),
+                              child: Text(
+                                'Notifiche',
+                                style: TextStyle(
+                                    color:
+                                        _mode == InboxScreenMode.notifications
+                                            ? Colors.white
+                                            : Constants.TEXT_COLOR),
                               ),
-                              child: Text('Notifiche', style: TextStyle(color: _mode == InboxScreenMode.notifications ? Colors.white : Constants.TEXT_COLOR),),
                               onPressed: () {
                                 getNotifications();
                                 setState(() {
@@ -445,23 +484,34 @@ class InboxScreenState extends State<InboxScreen>  {
                           ],
                         ),
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(
+                        height: 16,
+                      ),
                       Expanded(
-                        child: _isLoading ? Center(child: CircularProgressIndicator()) : _conversations.isNotEmpty ? MediaQuery.removePadding(
-                          context: context,
-                          removeTop: true,
-                          child: _mode == InboxScreenMode.notifications ? ListView.builder(
-                              itemCount: _notifications.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return notificationCell(_notifications[index]);
-                              }
-                          ) : ListView.builder(
-                              itemCount: _conversations.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return conversationCell(_conversations[index]);
-                              }
-                          ),
-                        ) : Text("Non ci sono chat al momento"),
+                        child: _isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : _conversations.isNotEmpty
+                                ? MediaQuery.removePadding(
+                                    context: context,
+                                    removeTop: true,
+                                    child: _mode ==
+                                            InboxScreenMode.notifications
+                                        ? ListView.builder(
+                                            itemCount: _notifications.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return notificationCell(
+                                                  _notifications[index]);
+                                            })
+                                        : ListView.builder(
+                                            itemCount: _conversations.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return conversationCell(
+                                                  _conversations[index]);
+                                            }),
+                                  )
+                                : Text("Non ci sono chat al momento"),
                       ),
                     ],
                   ),

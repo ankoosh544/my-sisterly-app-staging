@@ -27,7 +27,6 @@ class Welcome2ScreenState extends State<Welcome2Screen> {
   @override
   void initState() {
     super.initState();
-    Utils.deleteCrmUser(context);
     Timer.run(() {
       debugPrint("welcome 2 screen initState");
     });

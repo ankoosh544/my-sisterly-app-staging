@@ -21,7 +21,14 @@ class PaymentMethodScreen extends StatefulWidget {
   final String paymentIntentSecret;
   final Offer? offer;
 
-  const PaymentMethodScreen({Key? key, required this.successCallback, required this.failureCallback, required this.paymentIntentId, required this.paymentIntentSecret, this.offer}) : super(key: key);
+  const PaymentMethodScreen(
+      {Key? key,
+      required this.successCallback,
+      required this.failureCallback,
+      required this.paymentIntentId,
+      required this.paymentIntentSecret,
+      this.offer})
+      : super(key: key);
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -169,7 +176,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           ),
                         ),
                       ]),
-                      SizedBox(height: 24,),
+                      SizedBox(
+                        height: 24,
+                      ),
                       Row(
                         children: [
                           Expanded(
@@ -190,8 +199,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                         color: Color(0x4ca3c4d4),
                                         spreadRadius: 8,
                                         blurRadius: 12,
-                                        offset:
-                                        Offset(0, 0), // changes position of shadow
+                                        offset: Offset(
+                                            0, 0), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -221,7 +230,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                     onChanged: (number) {
                                       setState(() {
                                         _card = _card.copyWith(
-                                            expirationMonth: int.tryParse(number));
+                                            expirationMonth:
+                                                int.tryParse(number));
                                       });
                                     },
                                     keyboardType: TextInputType.number,
@@ -230,7 +240,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 12,),
+                          SizedBox(
+                            width: 12,
+                          ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,8 +261,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                         color: Color(0x4ca3c4d4),
                                         spreadRadius: 8,
                                         blurRadius: 12,
-                                        offset:
-                                        Offset(0, 0), // changes position of shadow
+                                        offset: Offset(
+                                            0, 0), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -280,7 +292,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                     onChanged: (number) {
                                       setState(() {
                                         _card = _card.copyWith(
-                                            expirationYear: int.tryParse(number));
+                                            expirationYear:
+                                                int.tryParse(number));
                                       });
                                     },
                                     keyboardType: TextInputType.number,
@@ -289,7 +302,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 12,),
+                          SizedBox(
+                            width: 12,
+                          ),
                           Column(
                             children: [
                               const Text("CVC",
@@ -307,8 +322,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                       color: Color(0x4ca3c4d4),
                                       spreadRadius: 8,
                                       blurRadius: 12,
-                                      offset:
-                                      Offset(0, 0), // changes position of shadow
+                                      offset: Offset(
+                                          0, 0), // changes position of shadow
                                     ),
                                   ],
                                 ),
@@ -348,53 +363,73 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                         ],
                       ),
                       SizedBox(height: 40),
-                      if(widget.offer != null) Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Totale da pagare",
-                            style: TextStyle(
-                                color: Constants.DARK_TEXT_COLOR,
-                                fontSize: 18,
-                                fontFamily: Constants.FONT,
-                                fontWeight: FontWeight.bold
+                      if (widget.offer != null)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Totale da pagare",
+                              style: TextStyle(
+                                  color: Constants.DARK_TEXT_COLOR,
+                                  fontSize: 18,
+                                  fontFamily: Constants.FONT,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            Utils.formatCurrency(widget.offer!.total),
-                            style: TextStyle(
-                                color: Constants.DARK_TEXT_COLOR,
-                                fontSize: 18,
-                                fontFamily: Constants.FONT,
-                                fontWeight: FontWeight.bold
+                            Text(
+                              Utils.formatCurrency(widget.offer!.total),
+                              style: TextStyle(
+                                  color: Constants.DARK_TEXT_COLOR,
+                                  fontSize: 18,
+                                  fontFamily: Constants.FONT,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 40),
-                      Text("L'importo verrà addebitato solo quando la Lender accetterà la tua richiesta di noleggio"),
-                      SizedBox(height: 40),
-                      Center(
-                        child: isLoading ? CircularProgressIndicator() : Opacity(
-                          opacity: 1,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Constants.SECONDARY_COLOR,
-                                textStyle: const TextStyle(fontSize: 16),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 46, vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50))),
-                            child: Text('Paga'),
-                            onPressed: () async {
-                              next();
-                            },
-                          ),
+                          ],
                         ),
+                      SizedBox(height: 40),
+                      Text(
+                          "L'importo verrà addebitato solo quando la Lender accetterà la tua richiesta di noleggio"),
+                      SizedBox(height: 40),
+                      Text('Salva per acquisti futuri',
+                          style: TextStyle(
+                            color: Constants.TEXT_COLOR,
+                            fontSize: 16,
+                            fontFamily: Constants.FONT,
+                          )),
+                      Switch(
+                        value: _saveCard!,
+                        onChanged: (value) => setState(() {
+                          _saveCard = value;
+                        }),
+                        activeColor: Constants.SECONDARY_COLOR,
                       ),
-                      SizedBox(height: 35)
+                      Center(
+                        child: isLoading
+                            ? CircularProgressIndicator()
+                            : Opacity(
+                                opacity: 1,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Constants.SECONDARY_COLOR,
+                                      textStyle: const TextStyle(fontSize: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 46, vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(50))),
+                                  child: Text('Paga'),
+                                  onPressed: () async {
+                                    setState(() {
+                                      _saveCard = true;
+                                    });
+                                    await saveCard();
+                                    next();
+                                  },
+                                ),
+                              ),
+                      ),
+                      SizedBox(height: 35),
                     ],
                   ),
                 ),
@@ -422,8 +457,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       PaymentMethodParams params = PaymentMethodParams.cardFromMethodId(
           paymentMethodData: PaymentMethodDataCardFromMethod(
               paymentMethodId: paymentMethod.id));
-      final confirmIntent = await Stripe.instance.confirmPayment(
-          widget.paymentIntentSecret, params);
+      final confirmIntent = await Stripe.instance
+          .confirmPayment(widget.paymentIntentSecret, params);
 
       debugPrint("confirmIntent " + confirmIntent.id.toString());
 
@@ -432,7 +467,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       });
 
       widget.successCallback();
-    } catch(e) {
+    } catch (e) {
       setState(() {
         isLoading = false;
       });
@@ -440,7 +475,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
       ApiManager.showFreeErrorToast(context, e.toString());
     }
+  }
 
-
+  saveCard() {
+    debugPrint("In Saving Card");
   }
 }

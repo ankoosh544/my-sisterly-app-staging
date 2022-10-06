@@ -36,7 +36,8 @@ class Upload2Screen extends StatefulWidget {
   final Product? editProduct;
   final dynamic step1Params;
 
-  const Upload2Screen({Key? key, this.editProduct, this.step1Params}) : super(key: key);
+  const Upload2Screen({Key? key, this.editProduct, this.step1Params})
+      : super(key: key);
 
   @override
   Upload2ScreenState createState() => Upload2ScreenState();
@@ -83,10 +84,11 @@ class Upload2ScreenState extends State<Upload2Screen> {
 
   populateEditProduct() {
     if (widget.editProduct != null) {
-      if(widget.editProduct!.lenderKitToSend != null) {
+      if (widget.editProduct!.lenderKitToSend != null) {
         try {
-          _selectedLenderKit = lenderKits.firstWhere((element) => element.id == widget.editProduct!.lenderKitToSend!.id);
-        } catch(e) {
+          _selectedLenderKit = lenderKits.firstWhere((element) =>
+              element.id == widget.editProduct!.lenderKitToSend!.id);
+        } catch (e) {
           debugPrint("Lender kit not present in lender list");
         }
       }
@@ -236,30 +238,33 @@ class Upload2ScreenState extends State<Upload2Screen> {
                           )),
                       SizedBox(height: 32),
                       Center(
-                        child: _isLoading ? CircularProgressIndicator() : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Constants.SECONDARY_COLOR,
-                              textStyle: const TextStyle(fontSize: 16),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 80, vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50))),
-                          child: Text('Conferma'),
-                          onPressed: () async {
-                            if (!_hasAddress ||
-                                (_saveAddress &&
-                                    _addNewAddress &&
-                                    !_editAddress)) {
-                              saveAddress(() async {
-                                _getAddresses(() {
-                                  _createProduct();
-                                });
-                              });
-                            } else {
-                              _createProduct();
-                            }
-                          },
-                        ),
+                        child: _isLoading
+                            ? CircularProgressIndicator()
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Constants.SECONDARY_COLOR,
+                                    textStyle: const TextStyle(fontSize: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 80, vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                                child: Text('Conferma'),
+                                onPressed: () async {
+                                  if (!_hasAddress ||
+                                      (_saveAddress &&
+                                          _addNewAddress &&
+                                          !_editAddress)) {
+                                    saveAddress(() async {
+                                      _getAddresses(() {
+                                        _createProduct();
+                                      });
+                                    });
+                                  } else {
+                                    _createProduct();
+                                  }
+                                },
+                              ),
                       ),
                       SizedBox(height: 60)
                     ],
@@ -284,16 +289,21 @@ class Upload2ScreenState extends State<Upload2Screen> {
     params["delivery_kit_pk"] = _activeAddress!.id;
     params["lender_kit_to_send"] = _selectedLenderKit.id;
 
-    if(widget.editProduct != null) {
-      ApiManager(context).makePostRequest('/product/' + widget.editProduct!.id.toString() + "/?version=v2", params, (res) {
+    if (widget.editProduct != null) {
+      ApiManager(context).makePostRequest(
+          '/product/' + widget.editProduct!.id.toString() + "/?version=v2",
+          params, (res) {
         setState(() {
           _isLoading = false;
         });
-        if(res["errors"] != null) {
+        if (res["errors"] != null) {
           ApiManager.showFreeErrorMessage(context, res["errors"].toString());
         } else {
           Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => ProductEditSuccessScreen()), (_) => false);
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      ProductEditSuccessScreen()),
+              (_) => false);
         }
       }, (res) {
         setState(() {
@@ -301,8 +311,9 @@ class Upload2ScreenState extends State<Upload2Screen> {
         });
       });
     } else {
-      ApiManager(context).makePutRequest('/product/?version=v2', params, (res) async {
-        if(res["errors"] != null) {
+      ApiManager(context).makePutRequest('/product/?version=v2', params,
+          (res) async {
+        if (res["errors"] != null) {
           setState(() {
             _isLoading = false;
           });
@@ -313,10 +324,11 @@ class Upload2ScreenState extends State<Upload2Screen> {
           await FirebaseAnalytics.instance.logEvent(name: "create_product");
           MyApp.facebookAppEvents.logEvent(name: "create_product");
 
-          if(_selectedLenderKit.id == 3) {
+          if (_selectedLenderKit.id == 3) {
             Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) =>
-                    ProductSuccessScreen()), (_) => false);
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ProductSuccessScreen()),
+                (_) => false);
           } else {
             askPayment(res["data"]["id"]);
           }
@@ -330,30 +342,36 @@ class Upload2ScreenState extends State<Upload2Screen> {
   }
 
   askPayment(productId) {
-    ApiManager(context).makePutRequest('/payment/make/lender-kit/' + productId.toString() + "?version=v2", {}, (res) async {
+    ApiManager(context).makePutRequest(
+        '/payment/make/lender-kit/' + productId.toString() + "?version=v2", {},
+        (res) async {
       setState(() {
         _isLoading = false;
       });
-      if(res["errors"] != null) {
+      if (res["errors"] != null) {
         ApiManager.showFreeErrorMessage(context, res["errors"].toString());
       } else {
-        if(res["data"] != null && res["data"]["client_secret"] != null) {
+        if (res["data"] != null && res["data"]["client_secret"] != null) {
           /*Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) => StripeWebviewScreen(title: "Pagamento", url: res["data"]["redirect_url"],)));*/
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (BuildContext context) => PaymentMethodScreen(
-                successCallback: () {
-                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (BuildContext context) =>
-                          ProductSuccessScreen()), (_) => false);
-                },
-                failureCallback: () {
-                  ApiManager.showFreeErrorMessage(context, "Pagamento fallito");
-                  Navigator.of(context, rootNavigator: true).pop(false);
-                },
-                paymentIntentId: null,
-                paymentIntentSecret: res["data"]["client_secret"],
-              )));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => PaymentMethodScreen(
+                    successCallback: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ProductSuccessScreen()),
+                              (_) => false);
+                    },
+                    failureCallback: () {
+                      ApiManager.showFreeErrorMessage(
+                          context, "Pagamento fallito");
+                      Navigator.of(context, rootNavigator: true).pop(false);
+                    },
+                    paymentIntentId: null,
+                    paymentIntentSecret: res["data"]["client_secret"],
+                  )));
         } else {
           ApiManager.showFreeErrorMessage(context, "Pagamento fallito");
         }
@@ -419,7 +437,7 @@ class Upload2ScreenState extends State<Upload2Screen> {
   }
 
   Widget _renderAddress(Address address) {
-    List<String> menu = ['Elimina', 'Predefinito', 'Modifica'];
+    List<String> menu = ['Selezionare', 'Modifica', 'Elimina'];
     if (address.active) {
       menu = ['Modifica'];
     }
@@ -469,7 +487,7 @@ class Upload2ScreenState extends State<Upload2Screen> {
                   case 'Elimina':
                     _deleteAddress(address);
                     break;
-                  case 'Predefinito':
+                  case 'Selezionare':
                     _setActiveAddress(address);
                     break;
                   case 'Modifica':

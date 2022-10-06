@@ -98,15 +98,7 @@ class ApiManager {
   }
 
   makeDeleteRequest(endpoint, success, failure) async {
-    debugPrint("==========DELETE============");
-    debugPrint(SessionData().token.toString());
-    debugPrint("=======UserId=========");
-    debugPrint(SessionData().userId.toString());
     await internalMakeDeleteRequest(endpoint, success, failure);
-    debugPrint("==========DELETE============");
-    debugPrint(SessionData().token.toString());
-    debugPrint("=======UserId=========");
-    debugPrint(SessionData().userId.toString());
   }
 
   internalMakePostRequest(

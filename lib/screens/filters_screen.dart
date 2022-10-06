@@ -14,7 +14,6 @@ import 'package:sisterly/utils/utils.dart';
 import 'package:sisterly/models/var.dart';
 
 class FiltersScreen extends StatefulWidget {
-
   final Filters? filters;
 
   const FiltersScreen({Key? key, @required this.filters}) : super(key: key);
@@ -24,7 +23,6 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-
   final TextEditingController _modelText = TextEditingController();
 
   final TextEditingController _fromDayText = TextEditingController();
@@ -46,7 +44,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   void initState() {
     super.initState();
 
-    if(widget.filters != null) _filters = widget.filters!;
+    if (widget.filters != null) _filters = widget.filters!;
 
     Future.delayed(Duration.zero, () {
       getColors();
@@ -98,12 +96,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
         }
       }
 
-      setState(() {
-
-      });
-    }, (res) {
-
-    });
+      setState(() {});
+    }, (res) {});
   }
 
   getDeliveryModes() {
@@ -117,12 +111,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
         }
       }
 
-      setState(() {
-
-      });
-    }, (res) {
-
-    });
+      setState(() {});
+    }, (res) {});
   }
 
   applyFilters() {
@@ -134,31 +124,30 @@ class _FiltersScreenState extends State<FiltersScreen> {
   Widget getTag(int id, String label, List<int> selected) {
     return InkWell(
       onTap: () {
-        if(selected.contains(id)) {
+        if (selected.contains(id)) {
           selected.remove(id);
         } else {
           selected.add(id);
         }
 
-        setState(() {
-
-        });
+        setState(() {});
       },
       child: Container(
         decoration: BoxDecoration(
-          color: selected.contains(id) ? Color(0xfffedcdc) : Color(0xffeff2f5),
-          borderRadius: BorderRadius.circular(60)
-        ),
+            color:
+                selected.contains(id) ? Color(0xfffedcdc) : Color(0xffeff2f5),
+            borderRadius: BorderRadius.circular(60)),
         margin: const EdgeInsets.only(right: 8, bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
         child: Text(
           label,
           style: TextStyle(
-              color: selected.contains(id) ? Constants.DARK_TEXT_COLOR : Constants.LIGHT_TEXT_COLOR,
+              color: selected.contains(id)
+                  ? Constants.DARK_TEXT_COLOR
+                  : Constants.LIGHT_TEXT_COLOR,
               fontSize: 16,
               height: 1.8,
-              fontFamily: Constants.FONT
-          ),
+              fontFamily: Constants.FONT),
           textAlign: TextAlign.center,
         ),
       ),
@@ -171,51 +160,54 @@ class _FiltersScreenState extends State<FiltersScreen> {
       margin: const EdgeInsets.only(right: 8, bottom: 8),
       child: Wrap(
         children: [
-          SvgPicture.asset(selected ? "assets/images/checked.svg" : "assets/images/check.svg"),
-          SizedBox(width: 8,),
+          SvgPicture.asset(selected
+              ? "assets/images/checked.svg"
+              : "assets/images/check.svg"),
+          SizedBox(
+            width: 8,
+          ),
           Text(
             label,
             style: TextStyle(
-                color: selected ? Constants.DARK_TEXT_COLOR : Constants.LIGHT_TEXT_COLOR,
+                color: selected
+                    ? Constants.DARK_TEXT_COLOR
+                    : Constants.LIGHT_TEXT_COLOR,
                 fontSize: 16,
                 height: 1.8,
-                fontFamily: Constants.FONT
-            ),
+                fontFamily: Constants.FONT),
             textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
-  
+
   Widget getColorBullet(int id, Color color, List<int> selected) {
     return InkWell(
       onTap: () {
-        if(selected.contains(id)) {
+        if (selected.contains(id)) {
           selected.remove(id);
         } else {
           selected.add(id);
         }
 
-        setState(() {
-
-        });
+        setState(() {});
       },
       child: Container(
-        width: 30,
-        height: 30,
-        margin: const EdgeInsets.only(right: 12, bottom: 8),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(30)
-        ),
-        child: selected.contains(id) ? SvgPicture.asset("assets/images/check_color.svg", width: 13, height: 10, fit: BoxFit.scaleDown) : SizedBox()
-      ),
+          width: 30,
+          height: 30,
+          margin: const EdgeInsets.only(right: 12, bottom: 8),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(30)),
+          child: selected.contains(id)
+              ? SvgPicture.asset("assets/images/check_color.svg",
+                  width: 13, height: 10, fit: BoxFit.scaleDown)
+              : SizedBox()),
     );
   }
 
   setFromDate(DateTime? date) {
-    if(date != null) {
+    if (date != null) {
       _fromDayText.text = date.day.toString();
       _fromMonthText.text = date.month.toString();
       _fromYearText.text = date.year.toString();
@@ -227,7 +219,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   }
 
   setToDate(DateTime? date) {
-    if(date != null) {
+    if (date != null) {
       _toDayText.text = date.day.toString();
       _toMonthText.text = date.month.toString();
       _toYearText.text = date.year.toString();
@@ -237,7 +229,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
       _toYearText.text = "";
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -248,8 +240,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30))
-            ),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(30))),
             child: SafeArea(
               child: SingleChildScrollView(
                 child: GestureDetector(
@@ -258,13 +251,15 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     if (details.delta.dy > sensitivity) {
                       // Down Swipe
                       debugPrint("down swipe");
-                    } else if(details.delta.dy < -sensitivity){
+                    } else if (details.delta.dy < -sensitivity) {
                       // Up Swipe
                     }
                   },
                   child: Column(
                     children: [
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Text(
                         "Filtri di ricerca",
                         textAlign: TextAlign.left,
@@ -272,176 +267,212 @@ class _FiltersScreenState extends State<FiltersScreen> {
                             color: Constants.PRIMARY_COLOR,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            fontFamily: Constants.FONT
-                        ),
+                            fontFamily: Constants.FONT),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 40,),
-                            Container(
-                              decoration: const BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0x4ca3c4d4),
-                                    spreadRadius: 8,
-                                    blurRadius: 12,
-                                    offset:
-                                    Offset(0, 0), // changes position of shadow
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x4ca3c4d4),
+                                      spreadRadius: 8,
+                                      blurRadius: 12,
+                                      offset: Offset(
+                                          0, 0), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: TextField(
+                                  keyboardType: TextInputType.text,
+                                  cursorColor: Constants.PRIMARY_COLOR,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Constants.FORM_TEXT,
                                   ),
+                                  decoration: InputDecoration(
+                                    hintText: "Nome modello...",
+                                    hintStyle: const TextStyle(
+                                        color: Constants.PLACEHOLDER_COLOR),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        width: 0,
+                                        style: BorderStyle.none,
+                                      ),
+                                    ),
+                                    prefixIcon: SvgPicture.asset(
+                                      "assets/images/search.svg",
+                                      width: 13,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                    contentPadding: const EdgeInsets.all(16),
+                                    filled: true,
+                                    fillColor: Constants.WHITE,
+                                  ),
+                                  controller: _modelText,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Brand",
+                                    style: TextStyle(
+                                        color: Constants.DARK_TEXT_COLOR,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: Constants.FONT),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  if (_filters.brand != null &&
+                                      _filters.brand! > 0)
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _filters.brand = null;
+                                        });
+                                      },
+                                      child: Text(
+                                        "Cancella",
+                                        style: TextStyle(
+                                            color: Constants.SECONDARY_COLOR,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: Constants.FONT),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
                                 ],
                               ),
-                              child: TextField(
-                                keyboardType: TextInputType.text,
-                                cursorColor: Constants.PRIMARY_COLOR,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Constants.FORM_TEXT,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: "Nome modello...",
-                                  hintStyle: const TextStyle(
-                                      color: Constants.PLACEHOLDER_COLOR),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                  prefixIcon: SvgPicture.asset("assets/images/search.svg", width: 13, fit: BoxFit.scaleDown,),
-                                  contentPadding: const EdgeInsets.all(16),
-                                  filled: true,
-                                  fillColor: Constants.WHITE,
-                                ),
-                                controller: _modelText,
+                              SizedBox(
+                                height: 8,
                               ),
-                            ),
-                            SizedBox(height: 40,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Brand",
-                                  style: TextStyle(
-                                      color: Constants.DARK_TEXT_COLOR,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: Constants.FONT),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(width: 16,),
-                                if(_filters.brand != null && _filters.brand! > 0) InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _filters.brand = null;
-                                    });
-                                  },
-                                  child: Text(
-                                    "Cancella",
+                              if (_brands.isNotEmpty)
+                                Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.only(left: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x4ca3c4d4),
+                                          spreadRadius: 8,
+                                          blurRadius: 12,
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<Brand>(
+                                          items: _brands
+                                              .map((Brand b) =>
+                                                  DropdownMenuItem<Brand>(
+                                                      child: Text(b.name,
+                                                          style: TextStyle(
+                                                              fontSize: 16)),
+                                                      value: b))
+                                              .toList(),
+                                          onChanged: (val) => setState(
+                                              () => _filters.brand = val!.id),
+                                          value: _filters.brand != null
+                                              ? _brands.firstWhere((element) =>
+                                                  element.id == _filters.brand)
+                                              : null),
+                                    )),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Categoria",
                                     style: TextStyle(
-                                        color: Constants.SECONDARY_COLOR,
-                                        fontSize: 14,
+                                        color: Constants.DARK_TEXT_COLOR,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: Constants.FONT),
                                     textAlign: TextAlign.center,
                                   ),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 8,),
-                            if (_brands.isNotEmpty)  Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.only(left: 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x4ca3c4d4),
-                                      spreadRadius: 8,
-                                      blurRadius: 12,
-                                      offset:
-                                      Offset(0, 0), // changes position of shadow
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  if (_filters.category != null &&
+                                      _filters.category! > 0)
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _filters.category = null;
+                                        });
+                                      },
+                                      child: Text(
+                                        "Cancella",
+                                        style: TextStyle(
+                                            color: Constants.SECONDARY_COLOR,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: Constants.FONT),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              if (_categories.isNotEmpty)
+                                Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.only(left: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x4ca3c4d4),
+                                          spreadRadius: 8,
+                                          blurRadius: 12,
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<Brand>(
-                                      items: _brands.map((Brand b) => DropdownMenuItem<Brand>(
-                                          child: Text(b.name, style: TextStyle(fontSize: 16)),
-                                          value: b
-                                      )
-                                      ).toList(),
-                                      onChanged: (val) => setState(() => _filters.brand = val!.id),
-                                      value: _filters.brand != null ? _brands.firstWhere((element) => element.id == _filters.brand) : null
-                                  ),
-                                )
-                            ),
-                            SizedBox(height: 40,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Categoria",
-                                  style: TextStyle(
-                                      color: Constants.DARK_TEXT_COLOR,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: Constants.FONT),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(width: 16,),
-                                if(_filters.category != null && _filters.category! > 0) InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _filters.category = null;
-                                    });
-                                  },
-                                  child: Text(
-                                    "Cancella",
-                                    style: TextStyle(
-                                        color: Constants.SECONDARY_COLOR,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: Constants.FONT),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 8,),
-                            if (_categories.isNotEmpty)  Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.only(left: 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x4ca3c4d4),
-                                      spreadRadius: 8,
-                                      blurRadius: 12,
-                                      offset:
-                                      Offset(0, 0), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<Category>(
-                                      items: _categories.map((Category b) => DropdownMenuItem<Category>(
-                                          child: Text(b.category, style: TextStyle(fontSize: 16)),
-                                          value: b
-                                      )
-                                      ).toList(),
-                                      onChanged: (val) => setState(() => _filters.category = val!.id),
-                                      value: _filters.category != null ? _categories.firstWhere((element) => element.id == _filters.category) : null
-                                  ),
-                                )
-                            ),
-                            /*Text(
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<Category>(
+                                          items: _categories
+                                              .map((Category b) =>
+                                                  DropdownMenuItem<Category>(
+                                                      child: Text(b.category,
+                                                          style: TextStyle(
+                                                              fontSize: 16)),
+                                                      value: b))
+                                              .toList(),
+                                          onChanged: (val) => setState(() =>
+                                              _filters.category = val!.id),
+                                          value: _filters.category != null
+                                              ? _categories.firstWhere((element) =>
+                                                  element.id ==
+                                                  _filters.category)
+                                              : null),
+                                    )),
+                              /*Text(
                               "Category",
                               style: TextStyle(
                                   color: Constants.DARK_TEXT_COLOR,
@@ -461,115 +492,146 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               ],
                             ),
                             SizedBox(height: 24,),*/
-                            SizedBox(height: 40,),
-                            Text(
-                              "Condizioni",
-                              style: TextStyle(
-                                  color: Constants.DARK_TEXT_COLOR,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: Constants.FONT),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 8,),
-                            Wrap(
-                              children: productConditions.map((item) {
-                                return getTag(item.id, item.name, _filters.conditions);
-                              }).toList()
-                            ),
-                            SizedBox(height: 24,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Colore",
-                                  style: TextStyle(
-                                      color: Constants.DARK_TEXT_COLOR,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: Constants.FONT),
-                                  textAlign: TextAlign.center,
-                                ),
-                                InkWell(
-                                  child: Text(
-                                    _filters.colors.isNotEmpty ? "Deseleziona tutti" : "Seleziona tutti",
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Text(
+                                "Condizioni",
+                                style: TextStyle(
+                                    color: Constants.DARK_TEXT_COLOR,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constants.FONT),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Wrap(
+                                  children: productConditions.map((item) {
+                                return getTag(
+                                    item.id, item.name, _filters.conditions);
+                              }).toList()),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Colore",
                                     style: TextStyle(
-                                        color: Constants.GREY,
-                                        fontSize: 16,
+                                        color: Constants.DARK_TEXT_COLOR,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: Constants.FONT),
                                     textAlign: TextAlign.center,
                                   ),
-                                  onTap: () {
-                                    setState(() {
-                                      if(_filters.colors.isNotEmpty) {
-                                        _filters.colors = [];
-                                      } else {
-                                        _filters.colors = _colorsList.map((e) => e.id).toList();
-                                      }
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 8,),
-                            Wrap(
-                              children: _colorsList.map((e) => getColorBullet(e.id, HexColor(e.hexadecimal), _filters.colors)).toList(),
-                            ),
-                            SizedBox(height: 24,),
-                            Text(
-                              "Modalità di consegna",
-                              style: TextStyle(
-                                  color: Constants.DARK_TEXT_COLOR,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: Constants.FONT),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 8,),
-                            Wrap(
-                              children: _deliveryModesList.map((e) => getTag(e.id, getDeliveryTypeName(e.id), _filters.deliveryModes),).toList(),
-                            ),
-                            SizedBox(height: 24,),
-                            Text(
-                              "Prezzo massimo",
-                              style: TextStyle(
-                                  color: Constants.DARK_TEXT_COLOR,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: Constants.FONT),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 8,),
-                          ]
-                        ),
+                                  InkWell(
+                                    child: Text(
+                                      _filters.colors.isNotEmpty
+                                          ? "Deseleziona tutti"
+                                          : "Seleziona tutti",
+                                      style: TextStyle(
+                                          color: Constants.GREY,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: Constants.FONT),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        if (_filters.colors.isNotEmpty) {
+                                          _filters.colors = [];
+                                        } else {
+                                          _filters.colors = _colorsList
+                                              .map((e) => e.id)
+                                              .toList();
+                                        }
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Wrap(
+                                children: _colorsList
+                                    .map((e) => getColorBullet(
+                                        e.id,
+                                        HexColor(e.hexadecimal),
+                                        _filters.colors))
+                                    .toList(),
+                              ),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                "Modalità di consegna",
+                                style: TextStyle(
+                                    color: Constants.DARK_TEXT_COLOR,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constants.FONT),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Wrap(
+                                children: _deliveryModesList
+                                    .map(
+                                      (e) => getTag(
+                                          e.id,
+                                          getDeliveryTypeName(e.id),
+                                          _filters.deliveryModes),
+                                    )
+                                    .toList(),
+                              ),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                "Prezzo massimo",
+                                style: TextStyle(
+                                    color: Constants.DARK_TEXT_COLOR,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constants.FONT),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                            ]),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            inactiveTrackColor: Color(0x66ffa8a8), // Custom Gray Color
-                            activeTrackColor: Constants.SECONDARY_COLOR,
-                            thumbColor: Constants.SECONDARY_COLOR,
-                            overlayColor: Constants.LIGHT_GREY_COLOR,
-                            activeTickMarkColor: Colors.white,
-                            showValueIndicator: ShowValueIndicator.always,
-                            valueIndicatorColor: Constants.SECONDARY_COLOR,
-                            trackHeight: 3
-                          ),
-                          child: Slider(
-                            value: _filters.maxPrice,
-                            min: 0,
-                            max: 100,
-                            label: _filters.maxPrice.round().toString(),
-                            onChanged: (double value) {
-                              setState(() {
-                                _filters.maxPrice = value;
-                              });
-                            },
-                          ),
-                        )
-                      ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                                inactiveTrackColor:
+                                    Color(0x66ffa8a8), // Custom Gray Color
+                                activeTrackColor: Constants.SECONDARY_COLOR,
+                                thumbColor: Constants.SECONDARY_COLOR,
+                                overlayColor: Constants.LIGHT_GREY_COLOR,
+                                activeTickMarkColor: Colors.white,
+                                showValueIndicator: ShowValueIndicator.always,
+                                valueIndicatorColor: Constants.SECONDARY_COLOR,
+                                trackHeight: 3),
+                            child: Slider(
+                              value: _filters.maxPrice,
+                              min: 0,
+                              max: 100,
+                              label: _filters.maxPrice.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  _filters.maxPrice = value;
+                                });
+                              },
+                            ),
+                          )),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -614,7 +676,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                 getTag("Wedding", true)
                               ],
                             ),*/
-                            SizedBox(height: 32,),
+                            SizedBox(
+                              height: 32,
+                            ),
                             Text(
                               "Disponibilità",
                               style: TextStyle(
@@ -624,7 +688,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                   fontFamily: Constants.FONT),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 8,),
+                            SizedBox(
+                              height: 8,
+                            ),
                             Text(
                               "Da",
                               style: TextStyle(
@@ -634,33 +700,42 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                   fontFamily: Constants.FONT),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 4,),
+                            SizedBox(
+                              height: 4,
+                            ),
                             InkWell(
                               onTap: () async {
                                 debugPrint("show date picker");
                                 final DateTime? picked = await showDatePicker(
                                   context: context,
-                                  initialDate: _filters.availableFrom ?? DateTime.now(),
-                                  firstDate: DateTime.now().subtract(Duration(days: 1)),
-                                  lastDate: DateTime.now().add(Duration(days: 700)),
+                                  initialDate:
+                                      _filters.availableFrom ?? DateTime.now(),
+                                  firstDate: DateTime.now()
+                                      .subtract(Duration(days: 1)),
+                                  lastDate:
+                                      DateTime.now().add(Duration(days: 700)),
                                 );
 
                                 setState(() {
-                                  if(picked != null) {
+                                  if (picked != null) {
                                     _filters.availableFrom = picked;
 
                                     setFromDate(_filters.availableFrom!);
-
-                                    if(_filters.availableTo!.isBefore(_filters.availableFrom!)) {
-                                      _filters.availableTo = _filters.availableFrom;
-                                      setToDate(_filters.availableTo!);
+                                    if (_filters.availableTo != null) {
+                                      if (_filters.availableTo!
+                                          .isBefore(_filters.availableFrom!)) {
+                                        _filters.availableTo =
+                                            _filters.availableFrom;
+                                        setToDate(_filters.availableTo!);
+                                      }
                                     }
                                   }
                                 });
                               },
                               child: AbsorbPointer(
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Container(
@@ -670,8 +745,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -684,16 +759,24 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           readOnly: true,
                                           decoration: InputDecoration(
                                             hintText: "gg",
-                                            hintStyle: const TextStyle(color: Constants.PLACEHOLDER_COLOR),
+                                            hintStyle: const TextStyle(
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -701,7 +784,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         decoration: const BoxDecoration(
@@ -710,8 +795,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -724,16 +809,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           decoration: InputDecoration(
                                             hintText: "mm",
                                             hintStyle: const TextStyle(
-                                                color: Constants.PLACEHOLDER_COLOR),
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -741,7 +833,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         decoration: const BoxDecoration(
@@ -750,8 +844,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -764,16 +858,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           decoration: InputDecoration(
                                             hintText: "aaaa",
                                             hintStyle: const TextStyle(
-                                                color: Constants.PLACEHOLDER_COLOR),
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -785,7 +886,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 24,),
+                            SizedBox(
+                              height: 24,
+                            ),
                             Text(
                               "A",
                               style: TextStyle(
@@ -795,25 +898,29 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                   fontFamily: Constants.FONT),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 4,),
+                            SizedBox(
+                              height: 4,
+                            ),
                             InkWell(
                               onTap: () async {
                                 debugPrint("show date picker TO");
                                 final DateTime? picked = await showDatePicker(
                                   context: context,
-                                  initialDate: _filters.availableTo ?? DateTime.now().add(Duration(days: 7)),
+                                  initialDate: _filters.availableTo ??
+                                      DateTime.now().add(Duration(days: 7)),
                                   firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(Duration(days: 700)),
+                                  lastDate:
+                                      DateTime.now().add(Duration(days: 700)),
                                 );
 
                                 setState(() {
-                                  if(picked != null) {
+                                  if (picked != null) {
                                     _filters.availableTo = picked;
 
                                     setToDate(_filters.availableTo!);
 
-                                    if (_filters.availableFrom!.isAfter(
-                                        _filters.availableTo!)) {
+                                    if (_filters.availableFrom!
+                                        .isAfter(_filters.availableTo!)) {
                                       debugPrint("Correct date");
                                       _filters.availableFrom =
                                           _filters.availableTo;
@@ -824,7 +931,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               },
                               child: AbsorbPointer(
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Container(
@@ -834,8 +942,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -848,16 +956,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           decoration: InputDecoration(
                                             hintText: "gg",
                                             hintStyle: const TextStyle(
-                                                color: Constants.PLACEHOLDER_COLOR),
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -865,7 +980,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         decoration: const BoxDecoration(
@@ -874,8 +991,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -888,16 +1005,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           decoration: InputDecoration(
                                             hintText: "mm",
                                             hintStyle: const TextStyle(
-                                                color: Constants.PLACEHOLDER_COLOR),
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -905,7 +1029,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         decoration: const BoxDecoration(
@@ -914,8 +1040,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                               color: Color(0x4ca3c4d4),
                                               spreadRadius: 2,
                                               blurRadius: 15,
-                                              offset:
-                                              Offset(0, 0), // changes position of shadow
+                                              offset: Offset(0,
+                                                  0), // changes position of shadow
                                             ),
                                           ],
                                         ),
@@ -928,16 +1054,23 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                           decoration: InputDecoration(
                                             hintText: "aaaa",
                                             hintStyle: const TextStyle(
-                                                color: Constants.PLACEHOLDER_COLOR),
+                                                color: Constants
+                                                    .PLACEHOLDER_COLOR),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               borderSide: const BorderSide(
                                                 width: 0,
                                                 style: BorderStyle.none,
                                               ),
                                             ),
-                                            suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                            contentPadding: const EdgeInsets.all(12),
+                                            suffixIcon: SvgPicture.asset(
+                                                "assets/images/arrow_down.svg",
+                                                width: 10,
+                                                height: 6,
+                                                fit: BoxFit.scaleDown),
+                                            contentPadding:
+                                                const EdgeInsets.all(12),
                                             filled: true,
                                             fillColor: Constants.WHITE,
                                           ),
@@ -949,7 +1082,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 32,),
+                            SizedBox(
+                              height: 32,
+                            ),
                             /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1008,7 +1143,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                 CupertinoSwitch(
                                   value: _filters.onlySameCity,
                                   activeColor: Constants.SECONDARY_COLOR,
-                                  onChanged: (bool value) { setState(() { _filters.onlySameCity = value; }); },
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      _filters.onlySameCity = value;
+                                    });
+                                  },
                                 ),
                               ],
                             ),
@@ -1036,23 +1175,26 @@ class _FiltersScreenState extends State<FiltersScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 40,),
+                      SizedBox(
+                        height: 40,
+                      ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: Constants.SECONDARY_COLOR,
                             textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 46, vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                        ),
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 46, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50))),
                         child: Text('Applica'),
                         onPressed: () {
                           applyFilters();
                         },
                       ),
-                      SizedBox(height: 40,),
+                      SizedBox(
+                        height: 40,
+                      ),
                     ],
                   ),
                 ),
@@ -1068,8 +1210,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
               onTap: () {
                 Navigator.of(context).pop();
               },
-            )
-        )
+            ))
       ],
     );
   }
