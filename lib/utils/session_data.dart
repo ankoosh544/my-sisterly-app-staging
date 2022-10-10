@@ -1,4 +1,3 @@
-
 import 'package:sisterly/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +8,6 @@ import 'package:sisterly/screens/welcome_screen.dart';
 import 'constants.dart';
 
 class SessionData {
-
   static final SessionData _instance = SessionData._internal();
 
   factory SessionData() => _instance;
@@ -20,8 +18,10 @@ class SessionData {
   String? email;
   String? deepLink;
   bool initialLinkManaged = false;
+  bool haveUpdateVerion = false;
 
-  var currencyFormat = NumberFormat.currency(symbol: "€", locale: "it_IT", customPattern: "€###.0#");
+  var currencyFormat = NumberFormat.currency(
+      symbol: "€", locale: "it_IT", customPattern: "€###.0#");
 
   SessionData._internal() {
     // init things inside this
@@ -33,8 +33,11 @@ class SessionData {
     var preferences = await SharedPreferences.getInstance();
     preferences.remove(Constants.PREFS_REFRESH_TOKEN);
     preferences.remove(Constants.PREFS_USERID);
+    preferences.remove(Constants.PREFS_HAVEUPDATEVERSION);
 
-    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()), (_) => false);
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()),
+        (_) => false);
   }
 
   clearStorageData() async {

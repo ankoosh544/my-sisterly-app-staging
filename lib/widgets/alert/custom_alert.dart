@@ -37,7 +37,6 @@ class CustomAlertOptions {
 }
 
 class CustomAlertDialog extends StatefulWidget {
-
   final Curve curve;
   final CustomAlertOptions options;
 
@@ -52,8 +51,8 @@ class CustomAlertDialog extends StatefulWidget {
   }
 }
 
-class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerProviderStateMixin, CustomAlert {
-
+class CustomAlertDialogState extends State<CustomAlertDialog>
+    with SingleTickerProviderStateMixin, CustomAlert {
   late AnimationController controller;
   late Animation<double> tween;
   late CustomAlertOptions _options;
@@ -64,8 +63,7 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
     controller = AnimationController(vsync: this);
     tween = Tween(begin: 0.0, end: 1.0).animate(controller);
     controller.animateTo(1.0,
-        duration: const Duration(milliseconds: 150),
-        curve: widget.curve);
+        duration: const Duration(milliseconds: 150), curve: widget.curve);
 
     CustomAlert._state = this;
     super.initState();
@@ -89,8 +87,6 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
     }
     Navigator.pop(context);
   }
-
-
 
   void cancel() {
     if (_options.onPress != null && _options.onPress!(false) == false) {
@@ -136,14 +132,20 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
         break;
     }
 
-    listOfChildren.add(const SizedBox(height: 10,));
+    listOfChildren.add(const SizedBox(
+      height: 10,
+    ));
 
     if (_options.title != null) {
       listOfChildren.add(Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
           _options.title!,
-          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Color(0xff575757), fontFamily: Constants.FONT),
+          style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xff575757),
+              fontFamily: Constants.FONT),
           textAlign: TextAlign.center,
         ),
       ));
@@ -154,7 +156,10 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
         padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
         child: Text(
           _options.subtitle!,
-          style: TextStyle(fontSize: 16.0, color: Color(0xff797979), fontFamily: Constants.FONT),
+          style: TextStyle(
+              fontSize: 16.0,
+              color: Color(0xff797979),
+              fontFamily: Constants.FONT),
           textAlign: TextAlign.center,
         ),
       ));
@@ -169,14 +174,16 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                child: RaisedButton(
-                  elevation: 0,
-                  padding: EdgeInsets.zero,
-                  onPressed: cancel,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(60.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _options.cancelButtonColor ?? CustomAlert.cancel,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60.0),
+                    ),
                   ),
-                  color: _options.cancelButtonColor ?? CustomAlert.cancel,
+                  onPressed: cancel,
                   child: Text(
                     _options.cancelButtonText ?? CustomAlert.cancelText,
                     style: TextStyle(color: Colors.black, fontSize: 16.0),
@@ -187,13 +194,16 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
                 width: 10.0,
               ),
               Expanded(
-                child: RaisedButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: confirm,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(60.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _options.cancelButtonColor ?? CustomAlert.danger,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60.0),
+                    ),
                   ),
-                  color: _options.confirmButtonColor ?? CustomAlert.danger,
+                  onPressed: confirm,
                   child: Text(
                     _options.confirmButtonText ?? CustomAlert.confirmText,
                     style: TextStyle(color: Colors.white, fontSize: 16.0),
@@ -206,13 +216,16 @@ class CustomAlertDialogState extends State<CustomAlertDialog> with SingleTickerP
       } else {
         listOfChildren.add(Padding(
           padding: EdgeInsets.only(top: 30.0),
-          child: RaisedButton(
-            onPressed: confirm,
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 0),
-            shape: RoundedRectangleBorder(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  _options.cancelButtonColor ?? CustomAlert.success,
+              padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(60.0),
+              ),
             ),
-            color: _options.confirmButtonColor ?? CustomAlert.success,
+            onPressed: confirm,
             child: Text(
               _options.confirmButtonText ?? CustomAlert.successText,
               style: TextStyle(color: Colors.white, fontSize: 16.0),
@@ -270,16 +283,16 @@ abstract class CustomAlert {
       String? title,
       String? subtitle,
       bool showCancelButton = false,
-        CustomAlertOnPress? onPress,
+      CustomAlertOnPress? onPress,
       Color? cancelButtonColor,
       Color? confirmButtonColor,
       String? cancelButtonText,
       String? confirmButtonText,
-        CustomAlertStyle? style}) {
+      CustomAlertStyle? style}) {
     confirmText = AppLocalizations.of(context).translate("generic_confirm");
     cancelText = AppLocalizations.of(context).translate("generic_cancel");
 
-    CustomAlertOptions options =  CustomAlertOptions(
+    CustomAlertOptions options = CustomAlertOptions(
         showCancelButton: showCancelButton,
         title: title,
         subtitle: subtitle,
@@ -289,9 +302,9 @@ abstract class CustomAlert {
         confirmButtonText: confirmButtonText,
         cancelButtonText: cancelButtonText,
         cancelButtonColor: cancelButtonColor);
-    if(_state!=null){
+    if (_state != null) {
       _state!.update(options);
-    }else{
+    } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -301,15 +314,11 @@ abstract class CustomAlert {
                 padding: EdgeInsets.all(40.0),
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
-                  body: CustomAlertDialog(
-                      curve: curve,
-                      options:options
-                  ),
+                  body: CustomAlertDialog(curve: curve, options: options),
                 ),
               ),
             );
           });
     }
-
   }
 }

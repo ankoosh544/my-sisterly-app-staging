@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:http/http.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:safe_device/safe_device.dart';
 import 'package:sisterly/utils/session_data.dart';
@@ -46,6 +47,17 @@ class Utils {
     }, (error) {
       debugPrint(error.toString());
       debugPrint("SalesmanagoDelete Delete KO");
+    });
+  }
+
+  static productCatalog(BuildContext context) {
+    ApiManager(context).salesManagoProduct((response) {
+      debugPrint("SalesmanagoProductCatalog Response");
+      debugPrint(response.toString());
+      debugPrint("SalesmanagoProductCatalog OK");
+    }, (error) {
+      debugPrint(error.toString());
+      debugPrint("SalesmanagoProductCatalog NOT OK");
     });
   }
 

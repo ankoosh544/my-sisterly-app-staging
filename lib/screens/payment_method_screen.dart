@@ -391,18 +391,22 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       Text(
                           "L'importo verrà addebitato solo quando la Lender accetterà la tua richiesta di noleggio"),
                       SizedBox(height: 40),
-                      Text('Salva per acquisti futuri',
-                          style: TextStyle(
-                            color: Constants.TEXT_COLOR,
-                            fontSize: 16,
-                            fontFamily: Constants.FONT,
-                          )),
-                      Switch(
-                        value: _saveCard!,
-                        onChanged: (value) => setState(() {
-                          _saveCard = value;
-                        }),
-                        activeColor: Constants.SECONDARY_COLOR,
+                      Row(
+                        children: [
+                          Switch(
+                            value: _saveCard!,
+                            onChanged: (value) => setState(() {
+                              _saveCard = value;
+                            }),
+                            activeColor: Constants.SECONDARY_COLOR,
+                          ),
+                          Text('Salva la carta per il futuro',
+                              style: TextStyle(
+                                color: Constants.TEXT_COLOR,
+                                fontSize: 16,
+                                fontFamily: Constants.FONT,
+                              )),
+                        ],
                       ),
                       Center(
                         child: isLoading
@@ -420,10 +424,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                               BorderRadius.circular(50))),
                                   child: Text('Paga'),
                                   onPressed: () async {
-                                    setState(() {
-                                      _saveCard = true;
-                                    });
-                                    await saveCard();
                                     next();
                                   },
                                 ),
@@ -457,9 +457,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       PaymentMethodParams params = PaymentMethodParams.cardFromMethodId(
           paymentMethodData: PaymentMethodDataCardFromMethod(
               paymentMethodId: paymentMethod.id));
+
       final confirmIntent = await Stripe.instance
           .confirmPayment(widget.paymentIntentSecret, params);
-
+      debugPrint(params.toString());
+      debugPrint("=======================");
       debugPrint("confirmIntent " + confirmIntent.id.toString());
 
       setState(() {
@@ -471,13 +473,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       setState(() {
         isLoading = false;
       });
+      debugPrint("========");
+      debugPrint(e.toString());
       ApiManager.showFreeErrorMessage(context, "Pagamento fallito. Riprova");
 
       ApiManager.showFreeErrorToast(context, e.toString());
     }
-  }
-
-  saveCard() {
-    debugPrint("In Saving Card");
   }
 }

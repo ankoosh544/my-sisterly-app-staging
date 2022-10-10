@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sisterly/models/account.dart';
 import 'package:sisterly/models/offer.dart';
 import 'package:sisterly/models/product.dart';
-import 'package:sisterly/screens/info_screen.dart';
-
+import 'package:sisterly/screens/add_review_screen.dart';
 import 'package:sisterly/screens/order_details_screen.dart';
 import 'package:sisterly/screens/profile_screen.dart';
 import 'package:sisterly/utils/api_manager.dart';
@@ -17,6 +16,8 @@ import 'package:sisterly/widgets/header_widget.dart';
 import 'package:sisterly/widgets/stars_widget.dart';
 import '../utils/constants.dart';
 import "package:sisterly/utils/utils.dart";
+import 'package:sisterly/screens/info_screen.dart';
+import 'package:sisterly/utils/constants.dart';
 
 enum OrdersScreenMode { received, sent }
 
@@ -28,6 +29,17 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class OrdersScreenState extends State<OrdersScreen> {
+  bool _isLoadingNext = false;
+  bool _canAskNext = true;
+  final int _pageSize = 5;
+  final List<String> _locations = [
+    'All',
+    'Confirmed',
+    'Pending',
+    'Closed'
+  ]; // Option 2
+  String _selectedLocation = "All";
+
   bool _isLoading = false;
   List<Offer> _orders = [];
   OrdersScreenMode _mode = OrdersScreenMode.received;
@@ -37,7 +49,7 @@ class OrdersScreenState extends State<OrdersScreen> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      getOrders();
+      getOrders(false);
     });
   }
 
@@ -46,50 +58,49 @@ class OrdersScreenState extends State<OrdersScreen> {
     super.dispose();
   }
 
-  getOrders() {
+  getOrders(nextPage) {
     setState(() {
-      _isLoading = true;
+      if (!nextPage) _isLoading = true;
+      if (nextPage) _isLoadingNext = true;
     });
 
     ApiManager(context).makeGetRequest(
         _mode == OrdersScreenMode.received
-            ? "/product/offers"
-            : "/product/cart",
-        {}, (res) {
-      // print(res);
-      setState(() {
-        _isLoading = false;
-      });
-
-      _orders = [];
+            ? "/product/order/received"
+            : "/product/order/made",
+        {
+          "count": _pageSize,
+          "mode": _selectedLocation,
+          "start": nextPage ? _orders.length : 0
+        }, (res) {
+      if (!nextPage) {
+        _orders = [];
+      }
 
       var data = res["data"];
       if (data != null) {
-        for (var prod in data) {
-          var order = Offer.fromJson(prod);
-          if (isOrder(order)) {
-            _orders.add(order);
+        if (data.length == 0) {
+          _canAskNext = false;
+        } else {
+          _canAskNext = true;
+
+          for (var off in data) {
+            _orders.add(Offer.fromJson(off));
           }
         }
       }
+
+      debugPrint("_orders " + _orders.length.toString());
+
+      setState(() {
+        _isLoading = false;
+        _isLoadingNext = false;
+      });
     }, (res) {
       setState(() {
         _isLoading = false;
       });
     });
-  }
-
-  isOrder(Offer offer) {
-    switch (offer.state.id) {
-      case 4:
-        return true;
-      case 5:
-        return true;
-      case 6:
-        return true;
-      default:
-        return false;
-    }
   }
 
   Widget offerCell(Offer offer) {
@@ -317,6 +328,28 @@ class OrdersScreenState extends State<OrdersScreen> {
                     fontWeight: FontWeight.bold),
               ),
             ),
+            SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Constants.PRIMARY_COLOR,
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 80, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                child: Text('Lascia recensione'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => AddReviewScreen(
+                            offer: offer,
+                            product: offer.product,
+                          )));
+                  //  launch("https://www.sisterly.it/faq.html");
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -372,44 +405,25 @@ class OrdersScreenState extends State<OrdersScreen> {
                 Navigator.of(context).pop();
               },
             ),
-            // RichText(
-            //     text: TextSpan(children: [
-            //   TextSpan(
-            //     text: "laBlaBla",
-            //     style: TextStyle(fontSize: 25),
-            //   ),
-            //   WidgetSpan(
-            //       child: SvgPicture.asset("assets/images/back.svg"),
-            //       baseline: TextBaseline.alphabetic,
-            //       alignment: PlaceholderAlignment.baseline),
-            // ])),
-
-            DropdownButton<String>(
+            DropdownButton(
               hint: Text(
                 'Noleggi',
                 style: TextStyle(color: Colors.white, fontSize: 30),
               ),
               iconEnabledColor: Colors.white,
               iconSize: 30,
-              items: <String>['Pending', 'Completed', 'Confirmed']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+              onChanged: (newValue) {
+                setState(() {
+                  _selectedLocation = newValue.toString();
+                  getOrders(false);
+                });
+              },
+              items: _locations.map((location) {
+                return DropdownMenuItem(
+                  child: new Text(location),
+                  value: location,
                 );
               }).toList(),
-              onChanged: (value) {
-                if (value == 'Pending') {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => InfoScreen()));
-                } else if (value == 'Completed') {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => InfoScreen()));
-                } else {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => InfoScreen()));
-                }
-              },
             ),
             InkWell(
               child: Container(
@@ -482,7 +496,7 @@ class OrdersScreenState extends State<OrdersScreen> {
                                 setState(() {
                                   _mode = OrdersScreenMode.sent;
 
-                                  getOrders();
+                                  getOrders(false);
                                 });
                               },
                             ),
@@ -511,11 +525,20 @@ class OrdersScreenState extends State<OrdersScreen> {
                                 setState(() {
                                   _mode = OrdersScreenMode.received;
 
-                                  getOrders();
+                                  getOrders(false);
                                 });
                               },
                             ),
                           ],
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Center(
+                        child: Text(
+                          _selectedLocation,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Constants.SECONDARY_COLOR, fontSize: 20),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -531,21 +554,53 @@ class OrdersScreenState extends State<OrdersScreen> {
                                           shrinkWrap: true,
                                           physics:
                                               const NeverScrollableScrollPhysics(),
-                                          itemCount: _orders.length,
+                                          itemCount: _orders.length +
+                                              (_canAskNext ? 1 : 0),
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            return InkWell(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              OrderDetailsScreen(
-                                                                  offer: _orders[
-                                                                      index])));
-                                                },
-                                                child:
-                                                    offerCell(_orders[index]));
+                                            if (index < _orders.length)
+                                              return InkWell(
+                                                  onTap: () {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                OrderDetailsScreen(
+                                                                    offer: _orders[
+                                                                        index])));
+                                                  },
+                                                  child: offerCell(
+                                                      _orders[index]));
+
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(32.0),
+                                              child: Center(
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      primary: Constants
+                                                          .SECONDARY_COLOR,
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 16),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 46,
+                                                          vertical: 14),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50))),
+                                                  child:
+                                                      Text('Carica altri...'),
+                                                  onPressed: () async {
+                                                    getOrders(true);
+                                                  },
+                                                ),
+                                              ),
+                                            );
                                           }),
                                     )
                                   : Center(

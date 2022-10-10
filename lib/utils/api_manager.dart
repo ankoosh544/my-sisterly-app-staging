@@ -29,11 +29,11 @@ class ApiManager {
       "password": password,
       "username_email": email
     };
-
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    var currentVersion = packageInfo.version;
-    params["app_version"] = currentVersion;
+    if (SessionData().haveUpdateVerion == false) {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      var currentVersion = packageInfo.version;
+      params["app_version"] = currentVersion;
+    }
 
     makePostRequest("/client/token", params, success, failure);
   }
@@ -69,6 +69,11 @@ class ApiManager {
     makePostRequest("/salesmanago/contact", null, success, failure);
   }
 
+  salesManagoProduct(success, failure) {
+    debugPrint("salesManagoProductCatalog called");
+    makePostRequest("/salesmanago/catalog", null, success, failure);
+  }
+
   //delete contact
   salesManagoContactDelete(success, failure) {
     debugPrint("salesManagoDelete called");
@@ -78,21 +83,17 @@ class ApiManager {
   refreshToken(refreshToken, success, failure) async {
     debugPrint("refreshToken called");
     var params = {"refresh": refreshToken};
-
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var currentVersion = packageInfo.version;
-    params["app_version"] = currentVersion;
+    if (SessionData().haveUpdateVerion == false) {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      var currentVersion = packageInfo.version;
+      params["app_version"] = currentVersion;
+    }
 
     await internalMakePostRequest("/client/token/refresh", params,
         SessionData().token, success, failure, false);
   }
 
   makePostRequest(endpoint, params, success, failure) async {
-    debugPrint("========token========");
-    debugPrint(SessionData().token.toString());
-    debugPrint("=======UserId=========");
-    debugPrint(SessionData().userId.toString());
-
     await internalMakePostRequest(
         endpoint, params, SessionData().token, success, failure, true);
   }

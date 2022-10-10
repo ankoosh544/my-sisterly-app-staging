@@ -28,7 +28,6 @@ import 'filters_screen.dart';
 import "package:sisterly/utils/utils.dart";
 
 class EditProfileScreen extends StatefulWidget {
-
   final int? id;
 
   const EditProfileScreen({Key? key, this.id}) : super(key: key);
@@ -37,8 +36,7 @@ class EditProfileScreen extends StatefulWidget {
   EditProfileScreenState createState() => EditProfileScreenState();
 }
 
-class EditProfileScreenState extends State<EditProfileScreen>  {
-
+class EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _usernameText = TextEditingController();
   final TextEditingController _firstNameText = TextEditingController();
   final TextEditingController _lastNameText = TextEditingController();
@@ -50,7 +48,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
   final TextEditingController _birthYearText = TextEditingController();
 
   final ImagePicker picker = ImagePicker();
-  
+
   XFile? _profileImage;
   bool _isLoading = false;
   bool _isLoadingProfile = false;
@@ -86,7 +84,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
         _descriptionText.text = _profile!.description.toString();
         _cityController.text = _profile!.residencyCity.toString();
 
-        if(_profile!.birthday != null) {
+        if (_profile!.birthday != null) {
           setBirthDate(_profile!.birthday!);
         }
       });
@@ -135,8 +133,10 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
       "birthday": DateFormat("yyyy-MM-dd").format(_profile!.birthday!)
     };
 
-    if(_profileImage != null) {
-      ApiManager(context).makeUploadRequest(context, "POST", '/client/update', _profileImage!.path, params, (res) {
+    if (_profileImage != null) {
+      ApiManager(context).makeUploadRequest(
+          context, "POST", '/client/update', _profileImage!.path, params,
+          (res) {
         // print(res);
         ApiManager.showFreeSuccessMessage(context, "Profilo salvato");
         Utils.updateCrmUser(context);
@@ -166,21 +166,22 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
   }
 
   String getFullName() {
-    if(_profile == null) return "";
-    return _profile!.firstName!.capitalize() + " " + _profile!.lastName!.capitalize();
+    if (_profile == null) return "";
+    return _profile!.firstName!.capitalize() +
+        " " +
+        _profile!.lastName!.capitalize();
   }
 
   String getFirstName() {
-    if(_profile == null) return "";
+    if (_profile == null) return "";
     return _profile!.firstName!.capitalize();
   }
 
   Future<bool> checkAndRequestCameraPermissions() async {
     PermissionStatus permission = await Permission.camera.status;
     if (permission != PermissionStatus.granted) {
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.camera
-      ].request();
+      Map<Permission, PermissionStatus> statuses =
+          await [Permission.camera].request();
       return statuses[Permission.camera] == PermissionStatus.granted;
     } else {
       return true;
@@ -244,57 +245,83 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(height: 8),
-                        _isLoadingProfile ? Center(child: CircularProgressIndicator()) : InkWell(
-                          onTap: () async {
-                            ImageSource? source = await showDialog<ImageSource>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                  content: Text("Scegli immagine da"),
-                                  actions: [
-                                    FlatButton(
-                                      child: Text("Scatta ora"),
-                                      onPressed: () => Navigator.pop(context, ImageSource.camera),
-                                    ),
-                                    FlatButton(
-                                      child: Text("Galleria"),
-                                      onPressed: () => Navigator.pop(context, ImageSource.gallery),
-                                    ),
-                                  ]
-                              ),
-                            );
+                        _isLoadingProfile
+                            ? Center(child: CircularProgressIndicator())
+                            : InkWell(
+                                onTap: () async {
+                                  ImageSource? source =
+                                      await showDialog<ImageSource>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                        content: Text("Scegli immagine da"),
+                                        actions: [
+                                          TextButton(
+                                            child: Text("Scatta ora"),
+                                            onPressed: () => Navigator.pop(
+                                                context, ImageSource.camera),
+                                          ),
+                                          TextButton(
+                                            child: Text("Galleria"),
+                                            onPressed: () => Navigator.pop(
+                                                context, ImageSource.gallery),
+                                          ),
+                                        ]),
+                                  );
 
-                            _profileImage = (await picker.pickImage(source: source!))!;
+                                  _profileImage = (await picker.pickImage(
+                                      source: source!))!;
 
-                            _upload();
-                            setState(() {});
-                          },
-                          child: Center(
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(90.0),
-                                  child: _profileImage != null ? Image.file(File(_profileImage!.path), width: 90, height: 90, fit: BoxFit.cover) : CachedNetworkImage(
-                                    width: 90, height: 90, fit: BoxFit.cover,
-                                    imageUrl: (_profile!.image ?? ""),
-                                    placeholder: (context, url) => CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => SvgPicture.asset("assets/images/placeholder.svg"),
+                                  _upload();
+                                  setState(() {});
+                                },
+                                child: Center(
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(90.0),
+                                        child: _profileImage != null
+                                            ? Image.file(
+                                                File(_profileImage!.path),
+                                                width: 90,
+                                                height: 90,
+                                                fit: BoxFit.cover)
+                                            : CachedNetworkImage(
+                                                width: 90,
+                                                height: 90,
+                                                fit: BoxFit.cover,
+                                                imageUrl:
+                                                    (_profile!.image ?? ""),
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget: (context, url,
+                                                        error) =>
+                                                    SvgPicture.asset(
+                                                        "assets/images/placeholder.svg"),
+                                              ),
+                                      ),
+                                      Positioned(
+                                          bottom: 16,
+                                          right: 16,
+                                          child: SvgPicture.asset(
+                                            "assets/images/edit.svg",
+                                            width: 20,
+                                          ))
+                                    ],
                                   ),
                                 ),
-                                Positioned(bottom: 16, right: 16, child: SvgPicture.asset("assets/images/edit.svg", width: 20,))
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
                         SizedBox(height: 32),
                         Text(
                           "Username",
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Container(
                           decoration: const BoxDecoration(
                             boxShadow: [
@@ -303,7 +330,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                 spreadRadius: 8,
                                 blurRadius: 12,
                                 offset:
-                                Offset(0, 0), // changes position of shadow
+                                    Offset(0, 0), // changes position of shadow
                               ),
                             ],
                           ),
@@ -338,10 +365,11 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Container(
                           decoration: const BoxDecoration(
                             boxShadow: [
@@ -350,7 +378,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                 spreadRadius: 8,
                                 blurRadius: 12,
                                 offset:
-                                Offset(0, 0), // changes position of shadow
+                                    Offset(0, 0), // changes position of shadow
                               ),
                             ],
                           ),
@@ -385,10 +413,11 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Container(
                           decoration: const BoxDecoration(
                             boxShadow: [
@@ -397,7 +426,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                 spreadRadius: 8,
                                 blurRadius: 12,
                                 offset:
-                                Offset(0, 0), // changes position of shadow
+                                    Offset(0, 0), // changes position of shadow
                               ),
                             ],
                           ),
@@ -432,10 +461,11 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Container(
                           decoration: const BoxDecoration(
                             boxShadow: [
@@ -444,7 +474,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                 spreadRadius: 8,
                                 blurRadius: 12,
                                 offset:
-                                Offset(0, 0), // changes position of shadow
+                                    Offset(0, 0), // changes position of shadow
                               ),
                             ],
                           ),
@@ -479,10 +509,11 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Container(
                           decoration: const BoxDecoration(
                             boxShadow: [
@@ -491,7 +522,7 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                 spreadRadius: 8,
                                 blurRadius: 12,
                                 offset:
-                                Offset(0, 0), // changes position of shadow
+                                    Offset(0, 0), // changes position of shadow
                               ),
                             ],
                           ),
@@ -526,22 +557,26 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                           style: TextStyle(
                               color: Constants.TEXT_COLOR,
                               fontSize: 16,
-                              fontFamily: Constants.FONT
-                          ),
+                              fontFamily: Constants.FONT),
                         ),
-                        SizedBox(height: 8,),
+                        SizedBox(
+                          height: 8,
+                        ),
                         InkWell(
                           onTap: () async {
                             debugPrint("show date picker");
                             final DateTime? picked = await showDatePicker(
                               context: context,
-                              initialDate: _profile!.birthday != null ? _profile!.birthday! : DateTime.now(),
-                              firstDate: DateTime.now().subtract(Duration(days: 150 * 365)),
+                              initialDate: _profile!.birthday != null
+                                  ? _profile!.birthday!
+                                  : DateTime.now(),
+                              firstDate: DateTime.now()
+                                  .subtract(Duration(days: 150 * 365)),
                               lastDate: DateTime.now(),
                             );
 
                             setState(() {
-                              if(picked != null) {
+                              if (picked != null) {
                                 _profile!.birthday = picked;
 
                                 setBirthDate(picked);
@@ -561,8 +596,8 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                           color: Color(0x4ca3c4d4),
                                           spreadRadius: 2,
                                           blurRadius: 15,
-                                          offset:
-                                          Offset(0, 0), // changes position of shadow
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -575,16 +610,23 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                       readOnly: true,
                                       decoration: InputDecoration(
                                         hintText: "gg",
-                                        hintStyle: const TextStyle(color: Constants.PLACEHOLDER_COLOR),
+                                        hintStyle: const TextStyle(
+                                            color: Constants.PLACEHOLDER_COLOR),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           borderSide: const BorderSide(
                                             width: 0,
                                             style: BorderStyle.none,
                                           ),
                                         ),
-                                        suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                        contentPadding: const EdgeInsets.all(12),
+                                        suffixIcon: SvgPicture.asset(
+                                            "assets/images/arrow_down.svg",
+                                            width: 10,
+                                            height: 6,
+                                            fit: BoxFit.scaleDown),
+                                        contentPadding:
+                                            const EdgeInsets.all(12),
                                         filled: true,
                                         fillColor: Constants.WHITE,
                                       ),
@@ -592,7 +634,9 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 8,),
+                                SizedBox(
+                                  width: 8,
+                                ),
                                 Expanded(
                                   child: Container(
                                     decoration: const BoxDecoration(
@@ -601,8 +645,8 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                           color: Color(0x4ca3c4d4),
                                           spreadRadius: 2,
                                           blurRadius: 15,
-                                          offset:
-                                          Offset(0, 0), // changes position of shadow
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -617,14 +661,20 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                         hintStyle: const TextStyle(
                                             color: Constants.PLACEHOLDER_COLOR),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           borderSide: const BorderSide(
                                             width: 0,
                                             style: BorderStyle.none,
                                           ),
                                         ),
-                                        suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                        contentPadding: const EdgeInsets.all(12),
+                                        suffixIcon: SvgPicture.asset(
+                                            "assets/images/arrow_down.svg",
+                                            width: 10,
+                                            height: 6,
+                                            fit: BoxFit.scaleDown),
+                                        contentPadding:
+                                            const EdgeInsets.all(12),
                                         filled: true,
                                         fillColor: Constants.WHITE,
                                       ),
@@ -632,7 +682,9 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 8,),
+                                SizedBox(
+                                  width: 8,
+                                ),
                                 Expanded(
                                   child: Container(
                                     decoration: const BoxDecoration(
@@ -641,8 +693,8 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                           color: Color(0x4ca3c4d4),
                                           spreadRadius: 2,
                                           blurRadius: 15,
-                                          offset:
-                                          Offset(0, 0), // changes position of shadow
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -657,14 +709,20 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                                         hintStyle: const TextStyle(
                                             color: Constants.PLACEHOLDER_COLOR),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           borderSide: const BorderSide(
                                             width: 0,
                                             style: BorderStyle.none,
                                           ),
                                         ),
-                                        suffixIcon: SvgPicture.asset("assets/images/arrow_down.svg", width: 10, height: 6, fit: BoxFit.scaleDown),
-                                        contentPadding: const EdgeInsets.all(12),
+                                        suffixIcon: SvgPicture.asset(
+                                            "assets/images/arrow_down.svg",
+                                            width: 10,
+                                            height: 6,
+                                            fit: BoxFit.scaleDown),
+                                        contentPadding:
+                                            const EdgeInsets.all(12),
                                         filled: true,
                                         fillColor: Constants.WHITE,
                                       ),
@@ -679,21 +737,24 @@ class EditProfileScreenState extends State<EditProfileScreen>  {
                         SizedBox(height: 32),
                         SafeArea(
                           child: Center(
-                            child: _isLoading ? CircularProgressIndicator() : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Constants.SECONDARY_COLOR,
-                                  textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 80, vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50))),
-                              child: Text('Salva'),
-                              onPressed: () {
-                                save();
-                              },
-                            ),
+                            child: _isLoading
+                                ? CircularProgressIndicator()
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Constants.SECONDARY_COLOR,
+                                        textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 80, vertical: 14),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50))),
+                                    child: Text('Salva'),
+                                    onPressed: () {
+                                      save();
+                                    },
+                                  ),
                           ),
                         ),
                       ],

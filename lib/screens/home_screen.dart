@@ -19,6 +19,7 @@ import 'package:sisterly/utils/utils.dart';
 import 'package:sisterly/widgets/header_widget.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 
 import '../main.dart';
 import '../utils/constants.dart';
@@ -38,6 +39,7 @@ class HomeScreenState extends State<HomeScreen> {
   bool _canAskNext = true;
   final int _pageSize = 100;
   StreamSubscription? _sub;
+  final _checker = AppVersionChecker();
 
   @override
   void initState() {
@@ -100,60 +102,40 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   checkVersion() {
-    ApiManager(context).makeGetLambdaRequest('/app-version', {}, (res) async {
-      if (res["latest_stags"] != null) {
-        var versionNumber = "";
-        var forceUpdate = false;
+    _checker.checkUpdate().then((value) async {
+      debugPrint(
+          value.canUpdate.toString()); //return true if update is available
 
-        if (Platform.isAndroid) {
-          versionNumber = res["latest_stags"]["android"]["version"]
-              .toString()
-              .replaceAll("-android", "");
-          forceUpdate = res["latest_stags"]["android"]["force_update"];
-          debugPrint("last version " + versionNumber);
-        } else if (Platform.isIOS) {
-          versionNumber = res["latest_stags"]["ios"]["version"]
-              .toString()
-              .replaceAll("-ios", "");
-          forceUpdate = res["latest_stags"]["ios"]["force_update"];
-          debugPrint("last version " + versionNumber);
-        }
-
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-        var currentVersion = packageInfo.version;
-
-        debugPrint("current version " + currentVersion);
-
-        if (currentVersion.toString().compareTo(versionNumber.toString()) < 0) {
-          if (forceUpdate) {
-            debugPrint("please update");
-
-            await showDialog<bool>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => AlertDialog(
-                  title: Text("Aggiornamento richiesto"),
-                  content: Text(
-                      "Per continuare ad utilizzare Sisterly, aggiorna la app."),
-                  actions: [
-                    FlatButton(
-                        child: Text("Aggiorna ora"),
-                        onPressed: () {
-                          if (Platform.isIOS) {
-                            Utils.launchBrowserURL(
-                                "https://apps.apple.com/it/app/sisterly/id1595106946?l=en");
-                          } else {
-                            Utils.launchBrowserURL(
-                                "https://play.google.com/store/apps/details?id=com.sisterly.sisterly");
-                          }
-                        }),
-                  ]),
-            );
-          }
-        }
+      debugPrint(value.currentVersion.toString()); //return current app version
+      debugPrint(value.newVersion.toString()); //return the new app version
+      debugPrint(value.appURL.toString()); //return the app url
+      debugPrint(value.errorMessage
+          .toString()); //return error message if found else it will return null
+      if (value.canUpdate) {
+        debugPrint("please update");
+        await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+              title: Text("Aggiornamento richiesto"),
+              content: Text(
+                  "Per continuare ad utilizzare Sisterly, aggiorna la app."),
+              actions: [
+                ElevatedButton(
+                    child: Text("Aggiorna ora"),
+                    onPressed: () {
+                      if (Platform.isIOS) {
+                        Utils.launchBrowserURL(
+                            "https://apps.apple.com/it/app/sisterly/id1595106946?l=en");
+                      } else {
+                        Utils.launchBrowserURL(
+                            "https://play.google.com/store/apps/details?id=com.sisterly.sisterly");
+                      }
+                    }),
+              ]),
+        );
       }
-    }, (res) {});
+    });
   }
 
   initPush() async {

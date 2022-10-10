@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:package_info/package_info.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sisterly/models/account.dart';
@@ -20,6 +21,7 @@ import 'forgot_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -36,6 +38,8 @@ class LoginScreenState extends State<LoginScreen>
   //final FocusNode _passwordFocus = new FocusNode();
   final _formKey = GlobalKey<FormState>(debugLabel: '_loginFormKey');
 
+  final _checker = AppVersionChecker();
+
   bool _showPassword = false;
   bool _isLoading = false;
 
@@ -45,6 +49,7 @@ class LoginScreenState extends State<LoginScreen>
 
     Future.delayed(Duration.zero, () {
       precompileEmail();
+      checkVersion();
     });
   }
 
@@ -129,6 +134,7 @@ class LoginScreenState extends State<LoginScreen>
         MyApp.facebookAppEvents.logEvent(name: "login");
 
         Utils.trackEvent(context, "LOGIN");
+        Utils.productCatalog(context);
 
         if (account.username!.isEmpty ||
             account.firstName!.isEmpty ||
@@ -199,13 +205,19 @@ class LoginScreenState extends State<LoginScreen>
 
     if (result.status == LoginStatus.success) {
       final AccessToken accessToken = result.accessToken!;
-
       print(accessToken);
 
       var params = {"access_token": accessToken.token};
 
+      if (SessionData().haveUpdateVerion == false) {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        var currentVersion = packageInfo.version;
+        params["app_version"] = currentVersion;
+      }
+
       ApiManager(context).makePostRequest("/client/oauth/facebook", params,
           (response) {
+        debugPrint(params.toString());
         manageLoginResponse(response["data"]);
       }, (res) {
         ApiManager.showFreeErrorMessage(context, res["errors"].toString());
@@ -241,6 +253,43 @@ class LoginScreenState extends State<LoginScreen>
       manageLoginResponse(response["data"]);
     }, (res) {
       ApiManager.showFreeErrorMessage(context, res["errors"].toString());
+    });
+  }
+
+  checkVersion() {
+    _checker.checkUpdate().then((value) async {
+      debugPrint(
+          value.canUpdate.toString()); //return true if update is available
+      SessionData().haveUpdateVerion = value.canUpdate;
+      debugPrint(value.currentVersion.toString()); //return current app version
+      debugPrint(value.newVersion.toString()); //return the new app version
+      debugPrint(value.appURL.toString()); //return the app url
+      debugPrint(value.errorMessage
+          .toString()); //return error message if found else it will return null
+      if (value.canUpdate) {
+        debugPrint("please update");
+        await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+              title: Text("Aggiornamento richiesto"),
+              content: Text(
+                  "Per continuare ad utilizzare Sisterly, aggiorna la app."),
+              actions: [
+                ElevatedButton(
+                    child: Text("Aggiorna ora"),
+                    onPressed: () {
+                      if (Platform.isIOS) {
+                        Utils.launchBrowserURL(
+                            "https://apps.apple.com/it/app/sisterly/id1595106946?l=en");
+                      } else {
+                        Utils.launchBrowserURL(
+                            "https://play.google.com/store/apps/details?id=com.sisterly.sisterly");
+                      }
+                    }),
+              ]),
+        );
+      }
     });
   }
 

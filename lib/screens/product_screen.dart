@@ -235,11 +235,11 @@ class ProductScreenState extends State<ProductScreen> {
       context: context,
       builder: (context) =>
           AlertDialog(content: Text("Scegli video da"), actions: [
-        FlatButton(
+        TextButton(
           child: Text("Registra ora"),
           onPressed: () => Navigator.pop(context, ImageSource.camera),
         ),
-        FlatButton(
+        TextButton(
           child: Text("Galleria"),
           onPressed: () => Navigator.pop(context, ImageSource.gallery),
         ),

@@ -17,14 +17,15 @@ class AddClaimScreen extends StatefulWidget {
   final Offer? offer;
   final bool isSeller;
 
-  const AddClaimScreen({Key? key, this.product, this.offer, required this.isSeller}) : super(key: key);
+  const AddClaimScreen(
+      {Key? key, this.product, this.offer, required this.isSeller})
+      : super(key: key);
 
   @override
   AddClaimScreenState createState() => AddClaimScreenState();
 }
 
 class AddClaimScreenState extends State<AddClaimScreen> {
-
   final TextEditingController _descriptionText = TextEditingController();
   String? _mediaId;
   bool _isUploading = false;
@@ -50,9 +51,7 @@ class AddClaimScreenState extends State<AddClaimScreen> {
     ApiManager(context).makePutRequest('/client/media', {}, (res) {
       _mediaId = res["data"]["id"];
 
-      setState(() {
-
-      });
+      setState(() {});
     }, (res) {});
   }
 
@@ -64,10 +63,9 @@ class AddClaimScreenState extends State<AddClaimScreen> {
       debugPrint("uploading " + _images.length.toString() + " images");
       int i = 1;
       for (var photo in _images) {
-        var params = {
-          "order": i++
-        };
-        ApiManager(context).makeUploadRequest(context, "PUT", '/client/media/$_mediaId/images', photo.path, params, (res) {
+        var params = {"order": i++};
+        ApiManager(context).makeUploadRequest(context, "PUT",
+            '/client/media/$_mediaId/images', photo.path, params, (res) {
           debugPrint('Photo uploaded');
           setState(() {
             _isUploading = false;
@@ -83,9 +81,7 @@ class AddClaimScreenState extends State<AddClaimScreen> {
         }, "image");
       }
 
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
@@ -153,8 +149,9 @@ class AddClaimScreenState extends State<AddClaimScreen> {
                           ),
                           maxLines: 4,
                           decoration: InputDecoration(
-                            hintText:
-                                widget.isSeller ? "Se ci sono danni causati da incuria da parte della borrower, segnalali subito." : "Se ci sono dei difetti in più rispetto a quello delle foto/descrizione della lender. Segnalali subito in modo da non assumerti le responsabilità per eventuali danni già presenti.",
+                            hintText: widget.isSeller
+                                ? "Se ci sono danni causati da incuria da parte della borrower, segnalali subito."
+                                : "Se ci sono dei difetti in più rispetto a quello delle foto/descrizione della lender. Segnalali subito in modo da non assumerti le responsabilità per eventuali danni già presenti.",
                             hintStyle: const TextStyle(
                                 color: Constants.PLACEHOLDER_COLOR),
                             border: OutlineInputBorder(
@@ -172,61 +169,74 @@ class AddClaimScreenState extends State<AddClaimScreen> {
                         ),
                       ),
                       SizedBox(height: 32),
-                      if(!_isUploading) Text(
-                        "Carica una foto",
-                        style: TextStyle(
-                            color: Constants.TEXT_COLOR,
-                            fontSize: 16,
-                            fontFamily: Constants.FONT),
-                      ),
-                      if(_isUploading) CircularProgressIndicator(),
-                      SizedBox(height: 8),
-                      if(_imageUrls.isNotEmpty) ClipRRect(
-                        child: CachedNetworkImage(
-                          imageUrl: _imageUrls[0],
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => SvgPicture.asset("assets/images/placeholder_product.svg"),
+                      if (!_isUploading)
+                        Text(
+                          "Carica una foto",
+                          style: TextStyle(
+                              color: Constants.TEXT_COLOR,
+                              fontSize: 16,
+                              fontFamily: Constants.FONT),
                         ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      if (_isUploading) CircularProgressIndicator(),
+                      SizedBox(height: 8),
+                      if (_imageUrls.isNotEmpty)
+                        ClipRRect(
+                          child: CachedNetworkImage(
+                            imageUrl: _imageUrls[0],
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                SvgPicture.asset(
+                                    "assets/images/placeholder_product.svg"),
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       SizedBox(height: 8),
                       TextButton(
                         style: ButtonStyle(
-                            side: MaterialStateProperty.all(BorderSide(color: Constants.SECONDARY_COLOR)),
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 46, vertical: 14)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)))
-                        ),
-                        child: Text(
-                            "Carica foto",
+                            side: MaterialStateProperty.all(
+                                BorderSide(color: Constants.SECONDARY_COLOR)),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 46, vertical: 14)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)))),
+                        child: Text("Carica foto",
                             style: TextStyle(
                                 color: Constants.SECONDARY_COLOR,
                                 fontSize: 16,
-                                fontFamily: Constants.FONT
-                            )
-                        ),
+                                fontFamily: Constants.FONT)),
                         onPressed: () async {
                           ImageSource? source = await showDialog<ImageSource>(
                             context: context,
                             builder: (context) => AlertDialog(
                                 content: Text("Scegli immagine da"),
                                 actions: [
-                                  FlatButton(
+                                  TextButton(
                                     child: Text("Scatta ora"),
-                                    onPressed: () => Navigator.pop(context, ImageSource.camera),
+                                    onPressed: () => Navigator.pop(
+                                        context, ImageSource.camera),
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                     child: Text("Galleria"),
-                                    onPressed: () => Navigator.pop(context, ImageSource.gallery),
+                                    onPressed: () => Navigator.pop(
+                                        context, ImageSource.gallery),
                                   ),
-                                ]
-                            ),
+                                ]),
                           );
 
-                          if(source == ImageSource.camera) {
-                            _images = [(await _picker.pickImage(source: ImageSource.camera))!];
+                          if (source == ImageSource.camera) {
+                            _images = [
+                              (await _picker.pickImage(
+                                  source: ImageSource.camera))!
+                            ];
                           } else {
-                            _images = [(await _picker.pickImage(source: ImageSource.gallery))!];
+                            _images = [
+                              (await _picker.pickImage(
+                                  source: ImageSource.gallery))!
+                            ];
                           }
 
                           _upload();
@@ -270,7 +280,9 @@ class AddClaimScreenState extends State<AddClaimScreen> {
 
     var params = {"description": _descriptionText.text.toString()};
 
-    ApiManager(context).makePutRequest('/product/order/' + widget.offer!.id.toString() + "/complain", params, (res) {
+    ApiManager(context).makePutRequest(
+        '/product/order/' + widget.offer!.id.toString() + "/complain", params,
+        (res) {
       if (res["errors"] != null) {
         ApiManager.showFreeErrorMessage(context, res["errors"].toString());
       } else {

@@ -45,7 +45,7 @@ class Constants {
   //     "https://api.sisterly.it/client/oauth/apple/callback";
 
   static const String FONT = "Manjari";
-
+  static const String PREFS_HAVEUPDATEVERSION = "haveupdateversion";
   static const String PREFS_USERID = "userid";
   static const String PREFS_USER = "user";
   static const String PREFS_LANGUAGE = "language";
